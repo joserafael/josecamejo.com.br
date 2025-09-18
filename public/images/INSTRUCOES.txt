@@ -1,0 +1,14 @@
+INSTRUÇÕES PARA ADICIONAR SUA FOTO:
+
+1. Salve sua foto como "profile.jpg" nesta pasta (public/images/)
+2. Recomendações para a foto:
+   - Formato: JPG ou PNG
+   - Tamanho recomendado: 400x400 pixels (quadrada)
+   - Tamanho do arquivo: máximo 500KB
+   - Qualidade: boa resolução, bem iluminada
+
+3. Substitua o arquivo "profile.svg" por "profile.jpg"
+
+4. A foto será exibida automaticamente na sua landing page!
+
+Dica: Para melhor resultado, use uma foto com fundo neutro e boa iluminação.
