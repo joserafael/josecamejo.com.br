@@ -122,6 +122,121 @@ php artisan key:generate --show
 # Copie a chave gerada para o .env
 ```
 
+### ❌ "Failed to open stream: No such file or directory" (storage/framework/views)
+
+**Causa:** Pastas de cache do Laravel não existem no servidor.
+
+**🚀 Solução 1: Script Web (Recomendado)**
+1. Faça upload do arquivo `fix-storage-prod.php` para a pasta `laravel_app/`
+2. Acesse: `https://seudominio.com.br/fix-storage-prod.php`
+3. Execute o script - ele fará diagnóstico completo e correções
+4. **IMPORTANTE:** Delete o arquivo após usar!
+
+**💻 Solução 2: Script CLI (via SSH)**
+1. Faça upload do arquivo `fix-storage-cli.php` para a pasta `laravel_app/`
+2. Acesse via SSH e execute: `php fix-storage-cli.php`
+3. Siga as instruções na tela
+4. Delete o arquivo após usar
+
+**🛠️ Solução 3: Manual via cPanel**
+```
+Criar pastas em laravel_app/storage/:
+├── app/public/
+├── framework/cache/data/
+├── framework/sessions/
+├── framework/testing/
+├── framework/views/
+└── logs/
+
+Permissões: 755 para todas as pastas
+```
+
+**🔍 Verificações Adicionais:**
+- Confirme se o arquivo `.env` existe (renomeie `.env.production` se necessário)
+- Verifique se as pastas têm permissões de leitura E escrita
+- Teste se o PHP consegue criar arquivos nas pastas
+
+**🚨 SOLUÇÃO EMERGENCIAL (RECOMENDADA)**
+
+**⚡ Script de Correção para Produção cPanel**
+**Use este script quando houver erro de caminhos misturados:**
+
+1. **Upload**: Faça upload do arquivo `fix-production-paths.php` para a raiz do seu site
+2. **Execute via SSH** (se tiver acesso):
+   ```bash
+   php fix-production-paths.php
+   ```
+3. **OU Execute via browser**: 
+   - Acesse: `https://seudominio.com.br/fix-production-paths.php`
+4. **Delete o arquivo** após usar:
+   ```bash
+   rm fix-production-paths.php
+   ```
+
+**✅ Este script:**
+- **Detecta automaticamente** o ambiente cPanel
+- **Corrige caminhos misturados** entre local e produção
+- **Força caminhos corretos** do servidor (`/home2/josecamejocom/laravel_app/`)
+- **Cria todas as pastas** necessárias com permissões corretas
+- **Limpa cache** do Laravel automaticamente
+- **Mostra debug detalhado** do que foi executado
+
+## 🎨 Solução para Erro do Vite Manifest
+
+Se você receber o erro: `Vite manifest not found at: /path/to/manifest.json`
+
+### 🚀 Opção 1: Compilar Assets (Recomendado)
+
+1. **No seu ambiente local:**
+   ```bash
+   npm install
+   npm run build
+   ```
+
+2. **Fazer upload da pasta `public/build`** completa para o servidor
+
+3. **Ou usar o script automático:**
+   - Upload: `copy-vite-assets.php`
+   - Execute: `php copy-vite-assets.php`
+   - Delete após uso
+
+### 📄 Opção 2: Manifest Básico (Emergencial)
+
+Se não conseguir compilar o Vite:
+
+- **Upload**: `create-basic-manifest.php`
+- **Execute**: `php create-basic-manifest.php`
+- **Delete**: Remova após uso
+
+**Funcionalidades:**
+- Cria manifest.json básico
+- Gera CSS e JS essenciais
+- Funciona sem Node.js/NPM
+- Solução temporária para emergências
+
+**🔧 Script Emergencial Genérico (Alternativo)**
+Se o script acima não funcionar, use o `fix-emergency.php`:
+
+1. **Upload**: `fix-emergency.php` para a raiz do site
+2. **Execute**: Via SSH (`php fix-emergency.php`) ou browser
+3. **Delete**: `rm fix-emergency.php`
+
+---
+
+**🚨 SEM ACESSO SSH/BROWSER? Use estas alternativas:**
+
+**📍 Solução 4: Via Rota Temporária**
+1. Copie o código do arquivo `temp-fix-route.php`
+2. Cole no final do arquivo `routes/web.php`
+3. Acesse: `https://seudominio.com.br/fix-storage-now`
+4. **REMOVA** a rota após usar!
+
+**📍 Solução 5: Via AppServiceProvider**
+1. Copie o código do arquivo `fix-via-provider.php`
+2. Cole no método `boot()` do `app/Providers/AppServiceProvider.php`
+3. Acesse qualquer página do site
+4. **REMOVA** o código após usar!
+
 ### ❌ Arquivos CSS/JS não carregam
 
 1. Verifique se os arquivos estão na `public_html/`

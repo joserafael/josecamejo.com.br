@@ -49,6 +49,21 @@ mkdir -p "$DEPLOY_DIR/laravel_app"
 log "Instalando dependências de produção..."
 composer install --no-dev --optimize-autoloader --no-interaction
 
+# Compilar assets do Vite
+log "Compilando assets do Vite para produção..."
+if [ -f "package.json" ]; then
+    if command -v npm &> /dev/null; then
+        npm install
+        npm run build
+        log "✅ Assets do Vite compilados com sucesso!"
+    else
+        warning "NPM não encontrado. Pulando compilação do Vite."
+        warning "Certifique-se de compilar os assets manualmente: npm run build"
+    fi
+else
+    warning "package.json não encontrado. Pulando compilação do Vite."
+fi
+
 # Otimizar aplicação
 log "Otimizando aplicação para produção..."
 php artisan config:cache
@@ -138,11 +153,21 @@ log "Copiando configuração de produção..."
 cp .env.production "$DEPLOY_DIR/laravel_app/.env"
 
 # Criar pastas de storage necessárias
-log "Criando estrutura de storage..."
-mkdir -p "$DEPLOY_DIR/laravel_app/storage/framework/cache"
+log "Criando estrutura completa de storage..."
+mkdir -p "$DEPLOY_DIR/laravel_app/storage/app/public"
+mkdir -p "$DEPLOY_DIR/laravel_app/storage/framework/cache/data"
 mkdir -p "$DEPLOY_DIR/laravel_app/storage/framework/sessions"
+mkdir -p "$DEPLOY_DIR/laravel_app/storage/framework/testing"
 mkdir -p "$DEPLOY_DIR/laravel_app/storage/framework/views"
 mkdir -p "$DEPLOY_DIR/laravel_app/storage/logs"
+
+# Criar arquivos .gitkeep para manter as pastas
+touch "$DEPLOY_DIR/laravel_app/storage/app/public/.gitkeep"
+touch "$DEPLOY_DIR/laravel_app/storage/framework/cache/data/.gitkeep"
+touch "$DEPLOY_DIR/laravel_app/storage/framework/sessions/.gitkeep"
+touch "$DEPLOY_DIR/laravel_app/storage/framework/testing/.gitkeep"
+touch "$DEPLOY_DIR/laravel_app/storage/framework/views/.gitkeep"
+touch "$DEPLOY_DIR/laravel_app/storage/logs/.gitkeep"
 
 # Definir permissões
 log "Definindo permissões..."
