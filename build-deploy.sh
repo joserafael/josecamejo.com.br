@@ -64,12 +64,6 @@ else
     warning "package.json não encontrado. Pulando compilação do Vite."
 fi
 
-# Otimizar aplicação
-log "Otimizando aplicação para produção..."
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-
 # Copiar arquivos da aplicação (exceto public)
 log "Copiando arquivos da aplicação..."
 rsync -av --exclude='public' \
@@ -169,6 +163,41 @@ touch "$DEPLOY_DIR/laravel_app/storage/framework/testing/.gitkeep"
 touch "$DEPLOY_DIR/laravel_app/storage/framework/views/.gitkeep"
 touch "$DEPLOY_DIR/laravel_app/storage/logs/.gitkeep"
 
+# Limpar caches com paths locais e gerar novos para produção
+log "Limpando caches com paths locais..."
+cd "$DEPLOY_DIR/laravel_app"
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
+
+# Gerar novos caches para produção (opcional - pode ser feito no servidor)
+log "Gerando caches para produção..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+cd - > /dev/null
+
+# Corrigir caminhos hardcoded nos arquivos de cache
+log "Corrigindo caminhos nos arquivos de cache..."
+CONFIG_CACHE_FILE="$DEPLOY_DIR/laravel_app/bootstrap/cache/config.php"
+if [ -f "$CONFIG_CACHE_FILE" ]; then
+    # Substituir caminhos locais por caminhos de produção
+    CURRENT_PATH=$(pwd)
+    DEPLOY_PATH="$CURRENT_PATH/deploy-cpanel/laravel_app"
+    
+    # Usar sed para substituir os caminhos
+    sed -i.bak "s|$DEPLOY_PATH|/home2/josecamejocom/laravel_app|g" "$CONFIG_CACHE_FILE"
+    
+    # Remover arquivo de backup
+    rm -f "$CONFIG_CACHE_FILE.bak"
+    
+    log "✅ Caminhos corrigidos no cache de configuração"
+else
+    log "⚠️  Arquivo de cache de configuração não encontrado"
+fi
+
 # Definir permissões
 log "Definindo permissões..."
 chmod -R 755 "$DEPLOY_DIR/laravel_app/storage"
@@ -207,6 +236,19 @@ cat > "$DEPLOY_DIR/INSTRUCOES_DEPLOY.md" << 'EOF'
 #### 📁 Permissões (via File Manager do cPanel)
 - storage/ → 755
 - bootstrap/cache/ → 755
+
+#### 🔄 Cache (IMPORTANTE - Execute via Terminal/SSH no cPanel)
+```bash
+# Limpar caches antigos (se necessário)
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+
+# Gerar novos caches para produção
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
 
 ### 3. Teste Final:
 - Acesse seu domínio
