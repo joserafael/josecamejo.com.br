@@ -1,41 +1,18 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $data['name'] }} - {{ $data['title'] }}</title>
-    <meta name="description" content="{{ $data['description'] }}">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Styles -->
-    @vite(['resources/css/app.css'])
-    
+@extends('layouts.app')
+
+@section('title', $data['name'] . ' - ' . $data['title'])
+@section('description', $data['description'])
+
+@push('styles')
     <!-- External CSS -->
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
-</head>
-<body>
-    <div id="app">
-        <home-component></home-component>
-        
-        <!-- Header -->
-    <header class="header">
-        <nav class="nav container">
-            <div class="logo">{{ explode(' ', $data['name'])[0] }}</div>
-            <ul class="nav-links">
-                <li><a href="#home">Início</a></li>
-                <li><a href="#about">Sobre</a></li>
-                <li><a href="#skills">Habilidades</a></li>
-                <li><a href="#contact">Contato</a></li>
-            </ul>
-        </nav>
-    </header>
+@endpush
+
+@push('vue-components')
+    <home-component></home-component>
+@endpush
+
+@section('content')
 
     <!-- Hero Section -->
     <section id="home" class="hero">
@@ -124,9 +101,4 @@
         </div>
     </section>
 
-    </div>
-    
-    <!-- Scripts -->
-    @vite(['resources/js/app.js'])
-</body>
-</html>
+@endsection
