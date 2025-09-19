@@ -21,7 +21,10 @@
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 </head>
 <body>
-    <!-- Header -->
+    <div id="app">
+        <home-component></home-component>
+        
+        <!-- Header -->
     <header class="header">
         <nav class="nav container">
             <div class="logo">{{ explode(' ', $data['name'])[0] }}</div>
@@ -121,10 +124,9 @@
         </div>
     </section>
 
+    </div>
+    
     <!-- Scripts -->
     @vite(['resources/js/app.js'])
-    
-    <!-- External JavaScript -->
-    <script src="{{ asset('js/home.js') }}"></script>
 </body>
 </html>
