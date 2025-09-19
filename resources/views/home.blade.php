@@ -73,7 +73,7 @@
             <div class="skills-grid">
                 @foreach($data['skills'] as $skill)
                 <div class="skill-card">
-                    <i class="fas fa-code"></i>
+                    <i class="{{ $skill['icon'] }} skill-icon"></i>
                     <h4>{{ $skill['name'] }}</h4>
                     <p>{{ $skill['description'] }}</p>
                 </div>
