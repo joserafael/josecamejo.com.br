@@ -99,43 +99,42 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(style);
 
-    // Mobile menu toggle (for future mobile menu implementation)
-    const createMobileMenu = () => {
-        const nav = document.querySelector('.nav');
-        const navLinks = document.querySelector('.nav-links');
-        
-        if (window.innerWidth <= 768) {
-            if (!document.querySelector('.mobile-menu-toggle')) {
-                const mobileToggle = document.createElement('button');
-                mobileToggle.className = 'mobile-menu-toggle';
-                mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                mobileToggle.style.cssText = `
-                    background: none;
-                    border: none;
-                    font-size: 1.5rem;
-                    color: #333;
-                    cursor: pointer;
-                    display: block;
-                `;
-                
-                mobileToggle.addEventListener('click', () => {
-                    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-                    navLinks.style.flexDirection = 'column';
-                    navLinks.style.position = 'absolute';
-                    navLinks.style.top = '100%';
-                    navLinks.style.left = '0';
-                    navLinks.style.right = '0';
-                    navLinks.style.background = 'white';
-                    navLinks.style.padding = '20px';
-                    navLinks.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-                });
-                
-                nav.appendChild(mobileToggle);
-            }
-        }
-    };
+    // Mobile Menu Toggle
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (mobileMenuToggle && navLinks) {
+        mobileMenuToggle.addEventListener('click', function() {
+            // Toggle active class on button for animation
+            this.classList.toggle('active');
+            
+            // Toggle active class on nav links to show/hide menu
+            navLinks.classList.toggle('active');
+        });
 
-    // Initialize mobile menu
-    createMobileMenu();
-    window.addEventListener('resize', createMobileMenu);
+        // Close mobile menu when clicking on a link
+        const navLinkItems = navLinks.querySelectorAll('a');
+        navLinkItems.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!mobileMenuToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                mobileMenuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Close mobile menu on window resize if screen becomes larger
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                mobileMenuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+    }
 });
