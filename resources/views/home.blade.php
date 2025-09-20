@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 @endpush
 
+@push('scripts')
+    <!-- External JS -->
+    <script src="{{ asset('js/home.js') }}"></script>
+@endpush
+
 @push('vue-components')
     <home-component></home-component>
 @endpush
