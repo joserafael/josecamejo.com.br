@@ -56,7 +56,8 @@ class HomeController extends Controller
             'social' => [
                 'github' => 'https://github.com/joserafael',
                 'linkedin' => 'https://www.linkedin.com/in/jose-rafael-camejo/',
-                'email' => 'contato@josecamejo.com.br'
+                'bluesky' => 'https://bsky.app/profile/josecamejo.com.br',
+                'X' => 'https://www.x.com/joserafael'
             ]
         ];
 
