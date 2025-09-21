@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AdminUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,10 +46,9 @@ Route::put('skills/{skill}', [AdminController::class, 'updateSkill'])->name('ski
 Route::delete('skills/{skill}', [AdminController::class, 'destroySkill'])->name('skills.destroy');
 
 // Gerenciamento de Usuários
-Route::resource('users', UserController::class);
-Route::post('users/{user}/activate', [UserController::class, 'activate'])->name('users.activate');
-Route::post('users/{user}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
-Route::post('users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+Route::resource('users', AdminUserController::class);
+Route::get('users/{user}/change-password', [AdminUserController::class, 'changePasswordForm'])->name('users.change-password');
+Route::put('users/{user}/update-password', [AdminUserController::class, 'changePassword'])->name('users.update-password');
 
 // Mensagens
 Route::get('messages', [AdminController::class, 'messages'])->name('messages.index');

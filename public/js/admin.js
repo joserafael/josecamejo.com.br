@@ -67,6 +67,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Enhanced Table Functionality
+    initializeEnhancedTable();
+
     // Auto-hide alerts/notifications
     const alerts = document.querySelectorAll('.alert[data-auto-hide]');
     alerts.forEach(alert => {
@@ -276,6 +279,108 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Enhanced Table Functionality
+function initializeEnhancedTable() {
+    const table = document.querySelector('.enhanced-table');
+    if (!table) return;
+
+    // Table sorting functionality
+    const sortableHeaders = table.querySelectorAll('.sortable');
+    let currentSort = { column: null, direction: 'asc' };
+
+    sortableHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const column = this.dataset.sort;
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            // Determine sort direction
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.direction = 'asc';
+            }
+            currentSort.column = column;
+
+            // Update header indicators
+            sortableHeaders.forEach(h => {
+                h.classList.remove('sort-asc', 'sort-desc');
+            });
+            this.classList.add(`sort-${currentSort.direction}`);
+
+            // Sort rows
+            rows.sort((a, b) => {
+                let aVal, bVal;
+
+                switch (column) {
+                    case 'id':
+                        aVal = parseInt(a.querySelector('.id-column').textContent);
+                        bVal = parseInt(b.querySelector('.id-column').textContent);
+                        break;
+                    case 'name':
+                        aVal = a.querySelector('.user-name').textContent.toLowerCase();
+                        bVal = b.querySelector('.user-name').textContent.toLowerCase();
+                        break;
+                    case 'email':
+                        aVal = a.querySelector('.email-column').textContent.toLowerCase();
+                        bVal = b.querySelector('.email-column').textContent.toLowerCase();
+                        break;
+                    case 'type':
+                        aVal = a.querySelector('.badge').textContent.toLowerCase();
+                        bVal = b.querySelector('.badge').textContent.toLowerCase();
+                        break;
+                    case 'created_at':
+                        aVal = new Date(a.querySelector('.date-column').dataset.date || a.querySelector('.date-column').textContent);
+                        bVal = new Date(b.querySelector('.date-column').dataset.date || b.querySelector('.date-column').textContent);
+                        break;
+                    default:
+                        aVal = a.textContent.toLowerCase();
+                        bVal = b.textContent.toLowerCase();
+                }
+
+                if (currentSort.direction === 'asc') {
+                    return aVal > bVal ? 1 : -1;
+                } else {
+                    return aVal < bVal ? 1 : -1;
+                }
+            });
+
+            // Re-append sorted rows
+            rows.forEach(row => tbody.appendChild(row));
+
+            // Add animation
+            tbody.style.opacity = '0.7';
+            setTimeout(() => {
+                tbody.style.opacity = '1';
+            }, 150);
+        });
+    });
+
+    // Row hover effects
+    const tableRows = table.querySelectorAll('tbody tr');
+    tableRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(2px)';
+        });
+
+        row.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0)';
+        });
+    });
+
+    // Action button animations
+    const actionButtons = table.querySelectorAll('.action-btn');
+    actionButtons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+        });
+
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+}
 
 // Utility functions
 window.AdminUtils = {
