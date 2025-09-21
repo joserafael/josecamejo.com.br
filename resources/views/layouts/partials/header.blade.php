@@ -1,6 +1,6 @@
 <header class="header">
     <nav class="nav container">
-        <div class="logo">{{ isset($data['name']) ? explode(' ', $data['name'])[0] : 'José' }}</div>
+        <div class="logo"></div>
         
         <!-- Mobile Menu Toggle -->
         <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
