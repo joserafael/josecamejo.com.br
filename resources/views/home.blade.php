@@ -93,16 +93,16 @@
             <h2 class="section-title">Vamos Conversar?</h2>
             <p>Estou sempre aberto a novos projetos e oportunidades. Entre em contato!</p>
             <div class="social-links">
-                <a href="{{ $data['social']['github'] }}" class="social-link" target="_blank" alt="GitHub">
+                <a href="{{ $data['social']['github'] }}" class="social-link" target="_blank">
                     <i class="fab fa-github"></i>
                 </a>
-                <a href="{{ $data['social']['linkedin'] }}" class="social-link" target="_blank" alt="LinkedIn">
+                <a href="{{ $data['social']['linkedin'] }}" class="social-link" target="_blank">
                     <i class="fab fa-linkedin"></i>
                 </a>
-                <a href="{{ $data['social']['bluesky'] }}" class="social-link" target="_blank" alt="Bluesky">
+                <a href="{{ $data['social']['bluesky'] }}" class="social-link" target="_blank">
                     <i class="fa-brands fa-bluesky"></i>
                 </a>
-                <a href="{{ $data['social']['X'] }}" class="social-link" target="_blank" alt="Twitter">
+                <a href="{{ $data['social']['X'] }}" class="social-link" target="_blank">
                     <i class="fab fa-twitter"></i>
                 </a>
             </div>
