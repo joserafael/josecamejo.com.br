@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\AdminUserController;
 
 /*
@@ -50,11 +51,11 @@ Route::resource('users', AdminUserController::class);
 Route::get('users/{user}/change-password', [AdminUserController::class, 'changePasswordForm'])->name('users.change-password');
 Route::put('users/{user}/update-password', [AdminUserController::class, 'changePassword'])->name('users.update-password');
 
-// Mensagens
-Route::get('messages', [AdminController::class, 'messages'])->name('messages.index');
-Route::get('messages/{message}', [AdminController::class, 'showMessage'])->name('messages.show');
-Route::post('messages/{message}/reply', [AdminController::class, 'replyMessage'])->name('messages.reply');
-Route::delete('messages/{message}', [AdminController::class, 'destroyMessage'])->name('messages.destroy');
+// Mensajes
+Route::resource('messages', MessageController::class);
+Route::post('messages/{message}/reply', [MessageController::class, 'reply'])->name('messages.reply');
+Route::post('messages/{message}/mark-as-read', [MessageController::class, 'markAsRead'])->name('messages.mark-as-read');
+Route::post('messages/{message}/toggle-read', [MessageController::class, 'toggleRead'])->name('messages.toggle-read');
 
 // Analytics
 Route::get('analytics', [AdminController::class, 'analytics'])->name('analytics');
