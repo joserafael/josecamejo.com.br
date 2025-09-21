@@ -6,7 +6,7 @@
 <div class="dashboard-container">
     <!-- Stats Cards -->
     <div class="stats-grid">
-        <div class="stat-card">
+        <div class="stat-card users-card">
             <div class="stat-icon">
                 <i class="fas fa-users"></i>
             </div>
@@ -18,9 +18,12 @@
                     +12% este mês
                 </span>
             </div>
+            <div class="stat-decoration">
+                <i class="fas fa-users"></i>
+            </div>
         </div>
 
-        <div class="stat-card">
+        <div class="stat-card posts-card">
             <div class="stat-icon">
                 <i class="fas fa-file-alt"></i>
             </div>
@@ -32,9 +35,12 @@
                     +5% este mês
                 </span>
             </div>
+            <div class="stat-decoration">
+                <i class="fas fa-file-alt"></i>
+            </div>
         </div>
 
-        <div class="stat-card">
+        <div class="stat-card projects-card">
             <div class="stat-icon">
                 <i class="fas fa-folder-open"></i>
             </div>
@@ -46,9 +52,12 @@
                     Sem alteração
                 </span>
             </div>
+            <div class="stat-decoration">
+                <i class="fas fa-folder-open"></i>
+            </div>
         </div>
 
-        <div class="stat-card">
+        <div class="stat-card messages-card">
             <div class="stat-icon">
                 <i class="fas fa-envelope"></i>
             </div>
@@ -59,6 +68,9 @@
                     <i class="fas fa-arrow-down"></i>
                     -3% este mês
                 </span>
+            </div>
+            <div class="stat-decoration">
+                <i class="fas fa-envelope"></i>
             </div>
         </div>
     </div>
@@ -196,255 +208,7 @@
     </div>
 </div>
 
-@push('styles')
-<style>
-/* Dashboard Specific Styles */
-.dashboard-container {
-    max-width: 1400px;
-    margin: 0 auto;
-}
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.stat-card {
-    background: var(--admin-surface);
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    box-shadow: var(--admin-shadow);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.stat-icon {
-    width: 3rem;
-    height: 3rem;
-    background: var(--admin-primary);
-    color: white;
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-}
-
-.stat-content {
-    flex: 1;
-}
-
-.stat-number {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0 0 0.25rem 0;
-    color: var(--admin-text);
-}
-
-.stat-label {
-    margin: 0 0 0.5rem 0;
-    color: var(--admin-text-muted);
-    font-size: 0.875rem;
-}
-
-.stat-change {
-    font-size: 0.75rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.stat-change.positive {
-    color: var(--admin-success);
-}
-
-.stat-change.negative {
-    color: var(--admin-danger);
-}
-
-.stat-change.neutral {
-    color: var(--admin-text-muted);
-}
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.dashboard-card {
-    background: var(--admin-surface);
-    border-radius: 0.5rem;
-    box-shadow: var(--admin-shadow);
-    overflow: hidden;
-}
-
-.card-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--admin-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.card-header h3 {
-    margin: 0;
-    font-size: 1.125rem;
-    font-weight: 600;
-}
-
-.card-content {
-    padding: 1.5rem;
-}
-
-.chart-placeholder {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: var(--admin-text-muted);
-}
-
-.chart-placeholder i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    display: block;
-}
-
-.activity-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.activity-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-}
-
-.activity-icon {
-    width: 2rem;
-    height: 2rem;
-    background: var(--admin-bg);
-    color: var(--admin-primary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.875rem;
-    flex-shrink: 0;
-}
-
-.activity-content p {
-    margin: 0 0 0.25rem 0;
-    font-size: 0.875rem;
-}
-
-.activity-time {
-    font-size: 0.75rem;
-    color: var(--admin-text-muted);
-}
-
-.quick-actions {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-}
-
-.quick-action {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 1rem;
-    background: var(--admin-bg);
-    border-radius: 0.5rem;
-    text-decoration: none;
-    color: var(--admin-text);
-    transition: all 0.2s ease;
-}
-
-.quick-action:hover {
-    background: var(--admin-primary);
-    color: white;
-    transform: translateY(-2px);
-}
-
-.quick-action i {
-    font-size: 1.5rem;
-}
-
-.system-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.info-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--admin-border);
-}
-
-.info-item:last-child {
-    border-bottom: none;
-}
-
-.info-label {
-    font-size: 0.875rem;
-    color: var(--admin-text-muted);
-}
-
-.info-value {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--admin-text);
-}
-
-.period-select {
-    padding: 0.25rem 0.5rem;
-    border: 1px solid var(--admin-border);
-    border-radius: 0.25rem;
-    font-size: 0.875rem;
-}
-
-.view-all-link {
-    color: var(--admin-primary);
-    text-decoration: none;
-    font-size: 0.875rem;
-}
-
-.view-all-link:hover {
-    text-decoration: underline;
-}
-
-@media (max-width: 1024px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .quick-actions {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
-@endpush
 
 @push('scripts')
 <script>
