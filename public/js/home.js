@@ -141,4 +141,69 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Contact Form and Captcha functionality
+    const contactForm = document.getElementById('contactForm');
+    const captchaQuestion = document.getElementById('captchaQuestion');
+    const captchaAnswer = document.getElementById('captcha_answer');
+    const refreshCaptcha = document.getElementById('refreshCaptcha');
+
+    // Function to generate new captcha
+    function generateCaptcha() {
+        fetch('/generate-captcha')
+            .then(response => response.json())
+            .then(data => {
+                captchaQuestion.textContent = data.question;
+                captchaAnswer.value = '';
+            })
+            .catch(error => {
+                console.error('Erro ao gerar captcha:', error);
+                captchaQuestion.textContent = 'Erro ao carregar';
+            });
+    }
+
+    // Generate initial captcha
+    if (captchaQuestion) {
+        generateCaptcha();
+    }
+
+    // Refresh captcha button
+    if (refreshCaptcha) {
+        refreshCaptcha.addEventListener('click', function() {
+            this.style.transform = 'rotate(180deg)';
+            setTimeout(() => {
+                this.style.transform = 'rotate(0deg)';
+            }, 300);
+            generateCaptcha();
+        });
+    }
+
+    // Form submission with loading state
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('.btn-submit');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            submitBtn.disabled = true;
+            
+            // Re-enable button after 3 seconds (in case of error)
+            setTimeout(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 3000);
+        });
+    }
+
+    // Auto-hide success messages
+    const successAlert = document.querySelector('.alert-success');
+    if (successAlert) {
+        setTimeout(() => {
+            successAlert.style.opacity = '0';
+            successAlert.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                successAlert.style.display = 'none';
+            }, 300);
+        }, 5000);
+    }
 });

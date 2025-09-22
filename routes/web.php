@@ -18,6 +18,10 @@ use App\Http\Controllers\Auth\LoginController;
 // Rota principal do site
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Rotas para formulário de mensagem
+Route::post('/send-message', [HomeController::class, 'sendMessage'])->name('send.message');
+Route::get('/generate-captcha', [HomeController::class, 'generateCaptcha'])->name('generate.captcha');
+
 // Rotas de autenticação
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
