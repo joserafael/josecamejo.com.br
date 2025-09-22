@@ -131,4 +131,12 @@ class HomeController extends Controller
             'num2' => $num2
         ]);
     }
+
+    /**
+     * Exibir a política de privacidade
+     */
+    public function privacyPolicy()
+    {
+        return view('privacy-policy');
+    }
 }

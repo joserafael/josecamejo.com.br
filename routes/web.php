@@ -22,6 +22,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/send-message', [HomeController::class, 'sendMessage'])->name('send.message');
 Route::get('/generate-captcha', [HomeController::class, 'generateCaptcha'])->name('generate.captcha');
 
+// Política de privacidade
+Route::get('/politica-de-privacidade', [HomeController::class, 'privacyPolicy'])->name('privacy.policy');
+
 // Rotas de autenticação
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);

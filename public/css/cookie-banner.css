@@ -1,0 +1,256 @@
+/* Cookie Banner Styles */
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    padding: 1rem;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 0;
+    border-top: 3px solid #3498db;
+}
+
+.cookie-banner.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.cookie-banner.hide {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+.cookie-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.cookie-text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.cookie-text i {
+    font-size: 1.5rem;
+    color: #f39c12;
+    flex-shrink: 0;
+}
+
+.cookie-text a {
+    color: #3498db;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.cookie-text a:hover {
+    color: #5dade2;
+}
+
+.cookie-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.cookie-actions button {
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 80px;
+}
+
+.btn-accept {
+    background: #27ae60;
+    color: white;
+}
+
+.btn-accept:hover {
+    background: #2ecc71;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.btn-reject {
+    background: transparent;
+    color: #bdc3c7;
+    border: 1px solid #7f8c8d;
+}
+
+.btn-reject:hover {
+    background: #7f8c8d;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Footer Privacy Link Styles */
+.privacy-link {
+    color: #7f8c8d;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+}
+
+.privacy-link:hover {
+    color: #3498db;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .cookie-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .cookie-text {
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .cookie-actions {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .cookie-actions button {
+        flex: 1;
+        max-width: 120px;
+    }
+    
+    .cookie-banner {
+        padding: 1.5rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .cookie-text {
+        font-size: 0.85rem;
+    }
+    
+    .cookie-text i {
+        font-size: 1.25rem;
+    }
+    
+    .cookie-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .cookie-actions button {
+        max-width: none;
+        width: 100%;
+    }
+}
+
+/* Animation for better UX */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+/* Accessibility improvements */
+.cookie-banner:focus-within {
+    outline: 2px solid #3498db;
+    outline-offset: 2px;
+}
+
+.cookie-actions button:focus {
+    outline: 2px solid #3498db;
+    outline-offset: 2px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .cookie-banner {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border-top-color: #3498db;
+    }
+    
+    .cookie-text {
+        color: #e8e8e8;
+    }
+    
+    .btn-reject {
+        color: #a0a0a0;
+        border-color: #555;
+    }
+    
+    .btn-reject:hover {
+        background: #555;
+        color: #fff;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .cookie-banner {
+        background: #000;
+        border-top: 4px solid #fff;
+    }
+    
+    .cookie-text {
+        color: #fff;
+    }
+    
+    .btn-accept {
+        background: #fff;
+        color: #000;
+        border: 2px solid #fff;
+    }
+    
+    .btn-reject {
+        background: #000;
+        color: #fff;
+        border: 2px solid #fff;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .cookie-banner {
+        transition: none;
+    }
+    
+    .cookie-actions button {
+        transition: none;
+    }
+    
+    .cookie-actions button:hover {
+        transform: none;
+    }
+}

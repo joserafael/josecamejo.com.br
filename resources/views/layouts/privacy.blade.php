@@ -26,10 +26,7 @@
         <!-- Vue Components -->
         @stack('vue-components')
         
-        <!-- Header -->
-        @include('layouts.partials.header')
-
-        <!-- Main Content -->
+        <!-- Main Content (sem header) -->
         <main>
             @yield('content')
         </main>
