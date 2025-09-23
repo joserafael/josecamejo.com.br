@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Message;
 use Illuminate\Support\Facades\Session;
+use App\Services\CaptchaService;
 
 class HomeController extends Controller
 {
@@ -91,8 +92,7 @@ class HomeController extends Controller
         ]);
 
         // Verificar captcha
-        $captchaResult = Session::get('captcha_result');
-        if (!$captchaResult || $request->captcha_answer != $captchaResult) {
+        if (!CaptchaService::validate($request->captcha_answer)) {
             return back()->withErrors(['captcha_answer' => 'Resposta incorreta para a operação matemática.'])->withInput();
         }
 
@@ -109,7 +109,7 @@ class HomeController extends Controller
         ]);
 
         // Limpar captcha da sessão
-        Session::forget('captcha_result');
+        CaptchaService::clear();
 
         return back()->with('success', 'Mensagem enviada com sucesso! Entrarei em contato em breve.');
     }
@@ -119,17 +119,7 @@ class HomeController extends Controller
      */
     public function generateCaptcha()
     {
-        $num1 = rand(1, 10);
-        $num2 = rand(1, 10);
-        $result = $num1 + $num2;
-        
-        Session::put('captcha_result', $result);
-        
-        return response()->json([
-            'question' => "$num1 + $num2 = ?",
-            'num1' => $num1,
-            'num2' => $num2
-        ]);
+        return CaptchaService::generateJson();
     }
 
     /**
