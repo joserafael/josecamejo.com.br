@@ -247,7 +247,7 @@ class LoginControllerTest extends TestCase
         $response->assertSessionHasErrors(['email']);
         
         $errors = session('errors')->get('email');
-        $this->assertContains('As credenciais fornecidas não correspondem aos nossos registros.', $errors);
+        $this->assertContains(__('messages.validation.login_invalid'), $errors);
     }
 
     #[Test]
@@ -261,6 +261,6 @@ class LoginControllerTest extends TestCase
         $response->assertSessionHasErrors(['email']);
         
         $errors = session('errors')->get('email');
-        $this->assertContains('Você não tem permissão para acessar o painel administrativo.', $errors);
+        $this->assertContains(__('messages.validation.access_denied'), $errors);
     }
 }

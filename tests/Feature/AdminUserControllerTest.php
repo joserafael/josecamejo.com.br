@@ -122,7 +122,7 @@ class AdminUserControllerTest extends TestCase
         $response = $this->post(route('admin.users.store'), $userData);
 
         $response->assertRedirect(route('admin.users.index'));
-        $response->assertSessionHas('success', 'Usuário criado com sucesso!');
+        $response->assertSessionHas('success', __('messages.success.user_created'));
 
         $this->assertDatabaseHas('users', [
             'name' => 'Novo Usuário',
@@ -220,7 +220,7 @@ class AdminUserControllerTest extends TestCase
         $response = $this->put(route('admin.users.update', $this->regularUser), $updateData);
 
         $response->assertRedirect(route('admin.users.index'));
-        $response->assertSessionHas('success', 'Usuário atualizado com sucesso!');
+        $response->assertSessionHas('success', __('messages.success.user_updated'));
 
         $this->assertDatabaseHas('users', [
             'id' => $this->regularUser->id,
@@ -256,7 +256,7 @@ class AdminUserControllerTest extends TestCase
         $response = $this->delete(route('admin.users.destroy', $userToDelete));
 
         $response->assertRedirect(route('admin.users.index'));
-        $response->assertSessionHas('success', 'Usuário deletado com sucesso!');
+        $response->assertSessionHas('success', __('messages.success.user_deleted'));
 
         $this->assertDatabaseMissing('users', [
             'id' => $userToDelete->id
@@ -271,7 +271,7 @@ class AdminUserControllerTest extends TestCase
         $response = $this->delete(route('admin.users.destroy', $this->adminUser));
 
         $response->assertRedirect(route('admin.users.index'));
-        $response->assertSessionHas('error', 'Você não pode deletar sua própria conta!');
+        $response->assertSessionHas('error', __('messages.error.cannot_delete_own_account'));
 
         $this->assertDatabaseHas('users', [
             'id' => $this->adminUser->id
@@ -303,7 +303,7 @@ class AdminUserControllerTest extends TestCase
         $response = $this->put(route('admin.users.update-password', $this->regularUser), $passwordData);
 
         $response->assertRedirect(route('admin.users.index'));
-        $response->assertSessionHas('success', 'Senha alterada com sucesso!');
+        $response->assertSessionHas('success', __('messages.success.password_changed'));
 
         // Verificar se a senha foi alterada
         $this->regularUser->refresh();

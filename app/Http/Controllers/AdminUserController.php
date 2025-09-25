@@ -78,6 +78,14 @@ class AdminUserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'is_admin' => ['boolean'],
+        ], [
+            'name.required' => __('messages.validation.name_required'),
+            'email.required' => __('messages.validation.email_required'),
+            'email.email' => __('messages.validation.email_invalid'),
+            'email.unique' => __('messages.validation.email_unique'),
+            'password.required' => __('messages.validation.password_required'),
+            'password.confirmed' => __('messages.validation.password_confirmed'),
+            'is_admin.boolean' => __('messages.validation.is_admin_boolean'),
         ]);
 
         $user = User::create([
@@ -88,7 +96,7 @@ class AdminUserController extends Controller
         ]);
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'Usuário criado com sucesso!');
+            ->with('success', __('messages.success.user_created'));
     }
 
     /**
@@ -119,6 +127,12 @@ class AdminUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'is_admin' => ['boolean'],
+        ], [
+            'name.required' => __('messages.validation.name_required'),
+            'email.required' => __('messages.validation.email_required'),
+            'email.email' => __('messages.validation.email_invalid'),
+            'email.unique' => __('messages.validation.email_unique'),
+            'is_admin.boolean' => __('messages.validation.is_admin_boolean'),
         ]);
 
         $user->update([
@@ -128,7 +142,7 @@ class AdminUserController extends Controller
         ]);
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'Usuário atualizado com sucesso!');
+            ->with('success', __('messages.success.user_updated'));
     }
 
     /**
@@ -141,13 +155,13 @@ class AdminUserController extends Controller
         // Previne que o admin delete a si mesmo
         if ($user->id === Auth::id()) {
             return redirect()->route('admin.users.index')
-                ->with('error', 'Você não pode deletar sua própria conta!');
+                ->with('error', __('messages.error.cannot_delete_own_account'));
         }
 
         $user->delete();
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'Usuário deletado com sucesso!');
+            ->with('success', __('messages.success.user_deleted'));
     }
 
     /**
@@ -167,6 +181,9 @@ class AdminUserController extends Controller
         $this->checkAdminAccess();
         $request->validate([
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'password.required' => __('messages.validation.password_required'),
+            'password.confirmed' => __('messages.validation.password_confirmed'),
         ]);
 
         $user->update([
@@ -174,6 +191,6 @@ class AdminUserController extends Controller
         ]);
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'Senha alterada com sucesso!');
+            ->with('success', __('messages.success.password_changed'));
     }
 }

@@ -84,15 +84,21 @@ class MessageController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'subject' => 'required|string|max:255',
-            'message' => 'required|string',
+            'message' => 'required|string|max:2000',
             'phone' => 'nullable|string|max:20',
             'company' => 'nullable|string|max:255',
+        ], [
+            'name.required' => __('messages.validation.name_required'),
+            'email.required' => __('messages.validation.email_required'),
+            'email.email' => __('messages.validation.email_invalid'),
+            'subject.required' => __('messages.validation.subject_required'),
+            'message.required' => __('messages.validation.message_required'),
         ]);
 
         Message::create($validated);
 
         return redirect()->route('admin.messages.index')
-            ->with('success', 'Mensagem criada com sucesso!');
+            ->with('success', __('messages.success.message_created'));
     }
 
     /**
@@ -147,17 +153,23 @@ class MessageController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'subject' => 'required|string|max:255',
-            'message' => 'required|string',
+            'message' => 'required|string|max:2000',
             'phone' => 'nullable|string|max:20',
             'company' => 'nullable|string|max:255',
             'is_read' => 'boolean',
             'is_replied' => 'boolean',
+        ], [
+            'name.required' => __('messages.validation.name_required'),
+            'email.required' => __('messages.validation.email_required'),
+            'email.email' => __('messages.validation.email_invalid'),
+            'subject.required' => __('messages.validation.subject_required'),
+            'message.required' => __('messages.validation.message_required'),
         ]);
 
         $message->update($validated);
 
         return redirect()->route('admin.messages.index')
-            ->with('success', 'Mensagem atualizada com sucesso!');
+            ->with('success', __('messages.success.message_updated'));
     }
 
     /**
@@ -168,7 +180,7 @@ class MessageController extends Controller
         $message->delete();
 
         return redirect()->route('admin.messages.index')
-            ->with('success', 'Mensagem excluída com sucesso!');
+            ->with('success', __('messages.success.message_deleted'));
     }
 
     /**
@@ -178,6 +190,8 @@ class MessageController extends Controller
     {
         $validated = $request->validate([
             'reply' => 'required|string'
+        ], [
+            'reply.required' => __('messages.validation.reply_required'),
         ]);
 
         $message->markAsReplied($validated['reply']);
@@ -186,7 +200,7 @@ class MessageController extends Controller
         // Mail::to($message->email)->send(new MessageReply($message, $validated['reply']));
 
         return redirect()->route('admin.messages.show', $message)
-            ->with('success', 'Resposta enviada com sucesso!');
+            ->with('success', __('messages.success.reply_sent'));
     }
 
     /**

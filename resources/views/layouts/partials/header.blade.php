@@ -10,10 +10,15 @@
         </button>
         
         <ul class="nav-links">
-            <li><a href="#home">Início</a></li>
-            <li><a href="#about">Sobre</a></li>
-            <li><a href="#skills">Habilidades</a></li>
-            <li><a href="#contact">Contato</a></li>
+            <li><a href="#home">{{ __('messages.home') }}</a></li>
+            <li><a href="#about">{{ __('messages.about') }}</a></li>
+            <li><a href="#skills">{{ __('messages.skills') }}</a></li>
+            <li><a href="#contact">{{ __('messages.contact') }}</a></li>
         </ul>
+        
+        <!-- Language Switcher -->
+        <div class="nav-language">
+            @include('layouts.partials.language-switcher')
+        </div>
     </nav>
 </header>

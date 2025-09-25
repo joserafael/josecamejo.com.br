@@ -25,6 +25,10 @@ class LoginController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
+        ], [
+            'email.required' => __('messages.validation.email_required'),
+            'email.email' => __('messages.validation.email_invalid'),
+            'password.required' => __('messages.validation.password_required'),
         ]);
 
         $credentials = $request->only('email', 'password');
@@ -39,13 +43,13 @@ class LoginController extends Controller
             } else {
                 Auth::logout();
                 throw ValidationException::withMessages([
-                    'email' => 'Você não tem permissão para acessar o painel administrativo.',
+                    'email' => __('messages.validation.access_denied'),
                 ]);
             }
         }
 
         throw ValidationException::withMessages([
-            'email' => 'As credenciais fornecidas não correspondem aos nossos registros.',
+            'email' => __('messages.validation.login_invalid'),
         ]);
     }
 

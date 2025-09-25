@@ -12,11 +12,11 @@
     <div class="cookie-content">
         <div class="cookie-text">
             <i class="fas fa-cookie-bite"></i>
-            <span>Este site usa cookies e outras tecnologias semelhantes para melhorar a sua experiência, analisar o tráfego do site e personalizar o conteúdo. Conheça a nossa <a href="{{ route('privacy.policy') }}" target="_blank">política de privacidade</a> e, ao continuar navegando, você concorda com estas condições.</span>
+            <span>{{ __('messages.cookie_notice') }} <a href="{{ route('privacy.policy') }}" target="_blank">{{ __('messages.privacy_policy') }}</a> {{ __('messages.cookie_agreement') }}</span>
         </div>
         <div class="cookie-actions">
-            <button id="accept-cookies" class="btn-accept">Aceitar</button>
-            <button id="reject-cookies" class="btn-reject">Rejeitar</button>
+            <button id="accept-cookies" class="btn-accept">{{ __('messages.accept_cookies') }}</button>
+            <button id="reject-cookies" class="btn-reject">{{ __('messages.reject_cookies') }}</button>
         </div>
     </div>
 </div>

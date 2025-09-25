@@ -16,43 +16,43 @@ class HomeController extends Controller
     {
         $data = [
             'name' => 'José Rafael Camejo',
-            'title' => 'Desenvolvedor Full Stack',
-            'description' => 'Apaixonado por tecnologia e desenvolvimento de soluções inovadoras',
+            'title' => __('messages.full_stack_developer'),
+            'description' => __('messages.passionate_about_technology'),
             'profile_image' => file_exists(public_path('images/profile.jpg')) ? '/images/profile.jpg' : '/images/profile.svg',
             'skills' => [
                 [
                     'name' => 'Ruby & Ruby on Rails',
-                    'description' => 'Desenvolvimento ágil de aplicações web robustas',
+                    'description' => __('messages.skill_ruby_description'),
                     'icon' => 'fas fa-gem'
                 ],
                 [
                     'name' => 'PHP (CodeIgniter, CakePHP, Laravel)',
-                    'description' => 'Criação de sistemas escaláveis e APIs RESTful',
+                    'description' => __('messages.skill_php_description'),
                     'icon' => 'fab fa-php'
                 ],
                 [
                     'name' => 'Python (Django, Flask)',
-                    'description' => 'Automação, análise de dados e web development',
+                    'description' => __('messages.skill_python_description'),
                     'icon' => 'fab fa-python'
                 ],
                 [
                     'name' => 'JavaScript (Vue.js, React, Node.js)',
-                    'description' => 'Interfaces modernas e experiências interativas',
+                    'description' => __('messages.skill_javascript_description'),
                     'icon' => 'fab fa-vuejs'
                 ], 
                 [
                     'name' => 'MySQL & PostgreSQL',
-                    'description' => 'Otimização e modelagem de bancos de dados',
+                    'description' => __('messages.skill_database_description'),
                     'icon' => 'fas fa-database'
                 ],
                 [
                     'name' => 'Docker',
-                    'description' => 'Containerização e deploy de aplicações',
+                    'description' => __('messages.skill_docker_description'),
                     'icon' => 'fab fa-docker'
                 ],
                 [
                     'name' => 'Git & GitHub',
-                    'description' => 'Controle de versão e colaboração em equipe',
+                    'description' => __('messages.skill_git_description'),
                     'icon' => 'fab fa-git-alt'
                 ]
             ],
@@ -82,18 +82,18 @@ class HomeController extends Controller
             'company' => 'nullable|string|max:255',
             'captcha_answer' => 'required|integer',
         ], [
-            'name.required' => 'O nome é obrigatório.',
-            'email.required' => 'O email é obrigatório.',
-            'email.email' => 'Por favor, insira um email válido.',
-            'subject.required' => 'O assunto é obrigatório.',
-            'message.required' => 'A mensagem é obrigatória.',
-            'captcha_answer.required' => 'Por favor, resolva a operação matemática.',
-            'captcha_answer.integer' => 'A resposta deve ser um número.',
+            'name.required' => __('messages.validation.name_required'),
+            'email.required' => __('messages.validation.email_required'),
+            'email.email' => __('messages.validation.email_invalid'),
+            'subject.required' => __('messages.validation.subject_required'),
+            'message.required' => __('messages.validation.message_required'),
+            'captcha_answer.required' => __('messages.validation.captcha_required'),
+            'captcha_answer.integer' => __('messages.validation.captcha_integer'),
         ]);
 
         // Verificar captcha
         if (!CaptchaService::validate($request->captcha_answer)) {
-            return back()->withErrors(['captcha_answer' => 'Resposta incorreta para a operação matemática.'])->withInput();
+            return back()->withErrors(['captcha_answer' => __('messages.validation.captcha_incorrect')])->withInput();
         }
 
         // Criar a mensagem
@@ -111,7 +111,7 @@ class HomeController extends Controller
         // Limpar captcha da sessão
         CaptchaService::clear();
 
-        return back()->with('success', 'Mensagem enviada com sucesso! Entrarei em contato em breve.');
+        return back()->with('success', __('messages.success.message_sent'));
     }
 
     /**

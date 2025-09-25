@@ -15,15 +15,37 @@ use App\Http\Controllers\Auth\LoginController;
 |
 */
 
-// Rota principal do site
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// Language switcher route (without prefix)
+Route::get('/language/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'es', 'pt'])) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('language.switch');
 
-// Rotas para formulário de mensagem
+// Default routes (without language prefix) - redirect to Portuguese
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/send-message', [HomeController::class, 'sendMessage'])->name('send.message');
 Route::get('/generate-captcha', [HomeController::class, 'generateCaptcha'])->name('generate.captcha');
-
-// Política de privacidade
 Route::get('/politica-de-privacidade', [HomeController::class, 'privacyPolicy'])->name('privacy.policy');
+
+// Localized routes for each language
+foreach (['en', 'es', 'pt'] as $locale) {
+    Route::prefix($locale)->name($locale . '.')->group(function () use ($locale) {
+        Route::get('/', [HomeController::class, 'index'])->name('home');
+        Route::post('/send-message', [HomeController::class, 'sendMessage'])->name('send.message');
+        Route::get('/generate-captcha', [HomeController::class, 'generateCaptcha'])->name('generate.captcha');
+        
+        // Privacy policy with different URLs per language
+        if ($locale === 'pt') {
+            Route::get('/politica-de-privacidade', [HomeController::class, 'privacyPolicy'])->name('privacy.policy');
+        } elseif ($locale === 'es') {
+            Route::get('/politica-de-privacidad', [HomeController::class, 'privacyPolicy'])->name('privacy.policy');
+        } else {
+            Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy.policy');
+        }
+    });
+}
 
 // Rotas de autenticação
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

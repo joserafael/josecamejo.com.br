@@ -57,7 +57,7 @@ class HomeControllerTest extends TestCase
         $response = $this->from('/generate-captcha')->post('/send-message', $messageData);
 
         $response->assertRedirect('/generate-captcha');
-        $response->assertSessionHas('success', 'Mensagem enviada com sucesso! Entrarei em contato em breve.');
+        $response->assertSessionHas('success', __('messages.success.message_sent'));
 
         // Verifica se a mensagem foi salva no banco
         $this->assertDatabaseHas('messages', [

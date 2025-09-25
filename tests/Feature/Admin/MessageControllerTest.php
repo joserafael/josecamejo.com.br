@@ -140,7 +140,7 @@ class MessageControllerTest extends TestCase
         $response = $this->post(route('admin.messages.store'), $messageData);
 
         $response->assertRedirect(route('admin.messages.index'));
-        $response->assertSessionHas('success', 'Mensagem criada com sucesso!');
+        $response->assertSessionHas('success', __('messages.success.message_created'));
 
         $this->assertDatabaseHas('messages', [
             'name' => 'Test User',
@@ -217,7 +217,7 @@ class MessageControllerTest extends TestCase
         $response = $this->put(route('admin.messages.update', $message), $updateData);
 
         $response->assertRedirect(route('admin.messages.index'));
-        $response->assertSessionHas('success', 'Mensagem atualizada com sucesso!');
+        $response->assertSessionHas('success', __('messages.success.message_updated'));
 
         $this->assertDatabaseHas('messages', [
             'id' => $message->id,
@@ -238,7 +238,7 @@ class MessageControllerTest extends TestCase
         $response = $this->delete(route('admin.messages.destroy', $message));
 
         $response->assertRedirect(route('admin.messages.index'));
-        $response->assertSessionHas('success', 'Mensagem excluída com sucesso!');
+        $response->assertSessionHas('success', __('messages.success.message_deleted'));
 
         $this->assertDatabaseMissing('messages', ['id' => $message->id]);
     }
@@ -257,7 +257,7 @@ class MessageControllerTest extends TestCase
         $response = $this->post(route('admin.messages.reply', $message), $replyData);
 
         $response->assertRedirect(route('admin.messages.show', $message));
-        $response->assertSessionHas('success', 'Resposta enviada com sucesso!');
+        $response->assertSessionHas('success', __('messages.success.reply_sent'));
 
         $message->refresh();
         $this->assertTrue($message->is_replied);
