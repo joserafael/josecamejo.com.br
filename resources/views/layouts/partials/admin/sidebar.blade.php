@@ -42,20 +42,44 @@
                     </a>
                 </li>
 
-                <!-- User Management -->
+                <!-- Blog Management -->
                 <li class="nav-item">
                     <div class="nav-group">
                         <div class="nav-group-header">
-                            <i class="fas fa-users"></i>
-                            <span>Usuários</span>
+                            <i class="fas fa-blog"></i>
+                            <span>Blog</span>
                         </div>
                     </div>
                 </li>
 
                 <li class="nav-item">
+                    <a href="{{ route('admin.blog-categories.index') }}" class="nav-link {{ request()->routeIs('admin.blog-categories.*') ? 'active' : '' }}">
+                        <i class="fas fa-folder"></i>
+                        <span>Categorias</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.blog-subcategories.index') }}" class="nav-link {{ request()->routeIs('admin.blog-subcategories.*') ? 'active' : '' }}">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Subcategorias</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.blog-tags.index') }}" class="nav-link {{ request()->routeIs('admin.blog-tags.*') ? 'active' : '' }}">
+                        <i class="fas fa-tags"></i>
+                        <span>Tags</span>
+                    </a>
+                </li>
+
+                <!-- User Management -->
+               
+
+                <li class="nav-item">
                     <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                         <i class="fas fa-user"></i>
-                        <span>Gerenciar Usuários</span>
+                        <span> Usuários</span>
                     </a>
                 </li>
 

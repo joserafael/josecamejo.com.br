@@ -6,6 +6,9 @@ use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\Admin\BlogCategoryController;
+use App\Http\Controllers\Admin\BlogSubcategoryController;
+use App\Http\Controllers\Admin\BlogTagController;
 use App\Http\Controllers\AdminUserController;
 
 /*
@@ -37,6 +40,11 @@ Route::post('posts/{post}/unpublish', [PostController::class, 'unpublish'])->nam
 // Rotas adicionais para projetos
 Route::post('projects/{project}/feature', [ProjectController::class, 'feature'])->name('projects.feature');
 Route::post('projects/{project}/unfeature', [ProjectController::class, 'unfeature'])->name('projects.unfeature');
+
+// Gerenciamento do Blog
+Route::resource('blog-categories', BlogCategoryController::class);
+Route::resource('blog-subcategories', BlogSubcategoryController::class);
+Route::resource('blog-tags', BlogTagController::class);
 
 // Habilidades (Skills)
 Route::get('skills', [AdminController::class, 'skills'])->name('skills.index');
