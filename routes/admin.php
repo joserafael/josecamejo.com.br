@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogSubcategoryController;
 use App\Http\Controllers\Admin\BlogTagController;
+use App\Http\Controllers\Admin\BlogImageController;
 use App\Http\Controllers\AdminUserController;
 
 /*
@@ -45,6 +46,7 @@ Route::post('projects/{project}/unfeature', [ProjectController::class, 'unfeatur
 Route::resource('blog-categories', BlogCategoryController::class);
 Route::resource('blog-subcategories', BlogSubcategoryController::class);
 Route::resource('blog-tags', BlogTagController::class);
+Route::resource('blog-images', BlogImageController::class);
 
 // Habilidades (Skills)
 Route::get('skills', [AdminController::class, 'skills'])->name('skills.index');
