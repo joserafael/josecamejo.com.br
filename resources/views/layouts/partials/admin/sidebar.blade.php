@@ -73,13 +73,34 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="{{ route('admin.blog-images.index') }}" class="nav-link {{ request()->routeIs('admin.blog-images.*') ? 'active' : '' }}">
+                        <i class="fas fa-images"></i>
+                        <span>Imagens</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.blog-videos.index') }}" class="nav-link {{ request()->routeIs('admin.blog-videos.*') ? 'active' : '' }}">
+                        <i class="fas fa-video"></i>
+                        <span>Vídeos</span>
+                    </a>
+                </li>
+
                 <!-- User Management -->
-               
+                <li class="nav-item">
+                    <div class="nav-group">
+                        <div class="nav-group-header">
+                            <i class="fas fa-users"></i>
+                            <span>Usuários</span>
+                        </div>
+                    </div>
+                </li>
 
                 <li class="nav-item">
                     <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                         <i class="fas fa-user"></i>
-                        <span> Usuários</span>
+                        <span>Usuários</span>
                     </a>
                 </li>
 
