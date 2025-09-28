@@ -54,7 +54,7 @@
                                 <i class="fas fa-external-link-alt"></i>
                                 Abrir em Nova Aba
                             </a>
-                            <button type="button" class="btn btn-outline" onclick="copyToClipboard('{{ $image->url }}')">
+                            <button type="button" class="btn btn-outline" onclick="copyToClipboard('{{ $image->url }}', this)">
                                 <i class="fas fa-copy"></i>
                                 Copiar URL
                             </button>
@@ -304,10 +304,10 @@
 </style>
 
 <script>
-function copyToClipboard(text) {
+function copyToClipboard(text, button) {
     navigator.clipboard.writeText(text).then(function() {
         // Show success message
-        const btn = event.target.closest('button');
+        const btn = button;
         const originalText = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
         btn.classList.add('btn-success');

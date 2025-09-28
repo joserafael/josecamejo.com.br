@@ -57,13 +57,11 @@
                                 <i class="fas fa-external-link-alt"></i>
                                 Abrir em Nova Aba
                             </a>
-                            <button type="button" class="btn btn-outline" onclick="copyToClipboard('{{ $video->url }}')">
-                                <i class="fas fa-copy"></i>
-                                Copiar URL
-                            </button>
+                            <button type="button" class="btn btn-outline" onclick="copyToClipboard('{{ $video->url }}', this)">
+                            <i class="fas fa-copy"></i> Copiar URL
+                        </button>
                             @if($video->thumbnail_url)
-                                <button type="button" class="btn btn-outline" onclick="copyToClipboard('{{ $video->thumbnail_url }}')">
-                                    <i class="fas fa-image"></i>
+                                <button type="button" class="btn btn-outline" onclick="copyToClipboard('{{ $video->thumbnail_url }}', this)">                                    <i class="fas fa-image"></i>
                                     Copiar URL da Thumbnail
                                 </button>
                             @endif
@@ -407,10 +405,10 @@
 </style>
 
 <script>
-function copyToClipboard(text) {
+function copyToClipboard(text, button) {
     navigator.clipboard.writeText(text).then(function() {
         // Show success message
-        const btn = event.target.closest('button');
+        const btn = button;
         const originalText = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
         btn.classList.add('btn-success');
