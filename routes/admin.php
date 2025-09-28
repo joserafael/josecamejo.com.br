@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogSubcategoryController;
 use App\Http\Controllers\Admin\BlogTagController;
 use App\Http\Controllers\Admin\BlogImageController;
+use App\Http\Controllers\Admin\BlogVideoController;
 use App\Http\Controllers\AdminUserController;
 
 /*
@@ -47,6 +48,7 @@ Route::resource('blog-categories', BlogCategoryController::class);
 Route::resource('blog-subcategories', BlogSubcategoryController::class);
 Route::resource('blog-tags', BlogTagController::class);
 Route::resource('blog-images', BlogImageController::class);
+Route::resource('blog-videos', BlogVideoController::class);
 
 // Habilidades (Skills)
 Route::get('skills', [AdminController::class, 'skills'])->name('skills.index');
