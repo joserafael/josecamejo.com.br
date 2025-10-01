@@ -145,6 +145,30 @@ class BlogPost extends Model
     }
 
     /**
+     * Get the comments for this post
+     */
+    public function comments()
+    {
+        return $this->hasMany(BlogComment::class);
+    }
+
+    /**
+     * Get approved comments for this post
+     */
+    public function approvedComments()
+    {
+        return $this->hasMany(BlogComment::class)->approved();
+    }
+
+    /**
+     * Get top-level approved comments (not replies)
+     */
+    public function topLevelComments()
+    {
+        return $this->hasMany(BlogComment::class)->approved()->topLevel()->with('replies');
+    }
+
+    /**
      * Scope for published posts
      */
     public function scopePublished($query)

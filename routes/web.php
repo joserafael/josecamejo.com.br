@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +48,21 @@ foreach (['en', 'es', 'pt'] as $locale) {
         }
     });
 }
+
+// Blog Routes
+Route::prefix('blog')->name('blog.')->group(function () {
+    Route::get('/', [BlogController::class, 'index'])->name('index');
+    Route::get('/category/{slug}', [BlogController::class, 'category'])->name('category');
+    Route::get('/tag/{slug}', [BlogController::class, 'tag'])->name('tag');
+    Route::get('/{slug}', [BlogController::class, 'show'])->name('show');
+});
+
+// Comment Routes
+Route::prefix('comments')->name('comments.')->group(function () {
+    Route::post('/blog/{blogPost}', [CommentController::class, 'store'])->name('store');
+    Route::get('/blog/{blogPost}', [CommentController::class, 'getComments'])->name('get');
+    Route::get('/replies/{comment}', [CommentController::class, 'getReplies'])->name('replies');
+});
 
 // Rotas de autenticação
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

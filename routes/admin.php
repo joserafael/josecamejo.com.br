@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\BlogTagController;
 use App\Http\Controllers\Admin\BlogImageController;
 use App\Http\Controllers\Admin\BlogVideoController;
 use App\Http\Controllers\Admin\BlogPostController;
+use App\Http\Controllers\Admin\BlogCommentController;
 use App\Http\Controllers\AdminUserController;
 
 /*
@@ -51,10 +52,16 @@ Route::resource('blog-subcategories', BlogSubcategoryController::class);
 Route::resource('blog-tags', BlogTagController::class);
 Route::resource('blog-images', BlogImageController::class);
 Route::resource('blog-videos', BlogVideoController::class);
+Route::resource('blog-comments', BlogCommentController::class);
 
 // Rotas adicionais para blog posts
 Route::patch('blog-posts/{blogPost}/toggle-featured', [BlogPostController::class, 'toggleFeatured'])->name('blog-posts.toggle-featured');
 Route::post('blog-posts/{blogPost}/duplicate', [BlogPostController::class, 'duplicate'])->name('blog-posts.duplicate');
+
+// Rotas adicionais para blog comments
+Route::post('blog-comments/{blogComment}/approve', [BlogCommentController::class, 'approve'])->name('blog-comments.approve');
+Route::post('blog-comments/{blogComment}/reject', [BlogCommentController::class, 'reject'])->name('blog-comments.reject');
+Route::post('blog-comments/bulk-action', [BlogCommentController::class, 'bulkAction'])->name('blog-comments.bulk-action');
 
 // Habilidades (Skills)
 Route::get('skills', [AdminController::class, 'skills'])->name('skills.index');
@@ -113,5 +120,8 @@ Route::prefix('api')->name('api.')->group(function () {
     Route::get('/notifications/count', [AdminController::class, 'getNotificationCount'])->name('notifications.count');
     Route::post('/auto-save', [AdminController::class, 'autoSave'])->name('auto-save');
 });
+
+// Blog Comments API Routes
+Route::get('/blog-comments/get-comments/{post}', [BlogCommentController::class, 'getCommentsByPost'])->name('blog-comments.get-comments');
 
 }); // Fim do grupo de middleware admin
