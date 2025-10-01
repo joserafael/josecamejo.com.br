@@ -50,6 +50,22 @@ class BlogCategory extends Model
     }
 
     /**
+     * Get posts for this category
+     */
+    public function posts(): HasMany
+    {
+        return $this->hasMany(BlogPost::class);
+    }
+
+    /**
+     * Get published posts for this category
+     */
+    public function publishedPosts(): HasMany
+    {
+        return $this->hasMany(BlogPost::class)->where('status', 'published')->where('published_at', '<=', now());
+    }
+
+    /**
      * Get active subcategories for this category in a specific language
      */
     public function activeSubcategoriesInLanguage($language = null): HasMany

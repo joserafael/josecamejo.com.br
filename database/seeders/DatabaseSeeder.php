@@ -16,11 +16,14 @@ class DatabaseSeeder extends Seeder
         // Criar usuário admin
         $this->call(AdminUserSeeder::class);
 
+        // Seed blog posts with all related data
+        $this->call(BlogPostSeeder::class);
+
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 
 class BlogVideo extends Model
@@ -82,6 +83,16 @@ class BlogVideo extends Model
     {
         $language = $language ?: app()->getLocale();
         return $query->where('language', $language);
+    }
+
+    /**
+     * Get posts associated with this video
+     */
+    public function posts(): BelongsToMany
+    {
+        return $this->belongsToMany(BlogPost::class, 'blog_post_video')
+                    ->withPivot(['sort_order', 'caption'])
+                    ->orderBy('pivot_sort_order');
     }
 
     /**

@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\BlogSubcategoryController;
 use App\Http\Controllers\Admin\BlogTagController;
 use App\Http\Controllers\Admin\BlogImageController;
 use App\Http\Controllers\Admin\BlogVideoController;
+use App\Http\Controllers\Admin\BlogPostController;
 use App\Http\Controllers\AdminUserController;
 
 /*
@@ -44,11 +45,16 @@ Route::post('projects/{project}/feature', [ProjectController::class, 'feature'])
 Route::post('projects/{project}/unfeature', [ProjectController::class, 'unfeature'])->name('projects.unfeature');
 
 // Gerenciamento do Blog
+Route::resource('blog-posts', BlogPostController::class);
 Route::resource('blog-categories', BlogCategoryController::class);
 Route::resource('blog-subcategories', BlogSubcategoryController::class);
 Route::resource('blog-tags', BlogTagController::class);
 Route::resource('blog-images', BlogImageController::class);
 Route::resource('blog-videos', BlogVideoController::class);
+
+// Rotas adicionais para blog posts
+Route::patch('blog-posts/{blogPost}/toggle-featured', [BlogPostController::class, 'toggleFeatured'])->name('blog-posts.toggle-featured');
+Route::post('blog-posts/{blogPost}/duplicate', [BlogPostController::class, 'duplicate'])->name('blog-posts.duplicate');
 
 // Habilidades (Skills)
 Route::get('skills', [AdminController::class, 'skills'])->name('skills.index');

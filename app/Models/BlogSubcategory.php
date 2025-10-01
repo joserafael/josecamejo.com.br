@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class BlogSubcategory extends Model
@@ -32,6 +33,22 @@ class BlogSubcategory extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(BlogCategory::class, 'blog_category_id');
+    }
+
+    /**
+     * Get posts for this subcategory
+     */
+    public function posts(): HasMany
+    {
+        return $this->hasMany(BlogPost::class);
+    }
+
+    /**
+     * Get published posts for this subcategory
+     */
+    public function publishedPosts(): HasMany
+    {
+        return $this->hasMany(BlogPost::class)->where('status', 'published')->where('published_at', '<=', now());
     }
 
     /**
