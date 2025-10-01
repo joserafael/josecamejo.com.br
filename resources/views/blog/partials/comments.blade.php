@@ -1,54 +1,55 @@
 @foreach($comments as $comment)
-    <div class="comment mb-4" id="comment-{{ $comment->id }}">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex">
-                    <!-- Avatar -->
-                    <div class="me-3">
-                        <img src="{{ $comment->gravatar }}" alt="{{ $comment->author_name }}" class="rounded-circle" width="50" height="50">
+    <div class="comment-item" id="comment-{{ $comment->id }}">
+        <div class="comment-card">
+            <div class="comment-header">
+                <!-- Avatar -->
+                <div class="comment-avatar">
+                    <img src="{{ $comment->gravatar }}" alt="{{ $comment->author_name }}" class="avatar-image">
+                </div>
+                
+                <!-- Author Info -->
+                <div class="comment-author-info">
+                    <div class="comment-author">
+                        @if($comment->author_website)
+                            <a href="{{ $comment->author_website }}" target="_blank" rel="nofollow" class="author-link">
+                                {{ $comment->author_name }}
+                            </a>
+                        @else
+                            <span class="author-name">{{ $comment->author_name }}</span>
+                        @endif
                     </div>
-                    
-                    <!-- Comment Content -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div>
-                                <h6 class="mb-1">
-                                    @if($comment->author_website)
-                                        <a href="{{ $comment->author_website }}" target="_blank" rel="nofollow" class="text-decoration-none">
-                                            {{ $comment->author_name }}
-                                        </a>
-                                    @else
-                                        {{ $comment->author_name }}
-                                    @endif
-                                </h6>
-                                <small class="text-muted">
-                                    <i class="fas fa-clock"></i> 
-                                    {{ $comment->created_at->diffForHumans() }}
-                                    @if($comment->isReply())
-                                        | <i class="fas fa-reply"></i> 
-                                        Resposta para {{ $comment->parent->author_name }}
-                                    @endif
-                                </small>
-                            </div>
-                            
-                            <!-- Reply Button -->
-                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="replyToComment({{ $comment->id }}, '{{ addslashes($comment->author_name) }}')">
-                                <i class="fas fa-reply"></i> Responder
-                            </button>
-                        </div>
-                        
-                        <!-- Comment Text -->
-                        <div class="comment-content">
-                            {!! nl2br(e($comment->content)) !!}
-                        </div>
+                    <div class="comment-meta">
+                        <span class="comment-time">
+                            <i class="fas fa-clock"></i> 
+                            {{ $comment->created_at->diffForHumans() }}
+                        </span>
+                        @if($comment->isReply())
+                            <span class="comment-reply-info">
+                                <i class="fas fa-reply"></i> 
+                                Resposta para {{ $comment->parent->author_name }}
+                            </span>
+                        @endif
                     </div>
                 </div>
+                
+                <!-- Reply Button -->
+                <div class="comment-actions">
+                    <button type="button" class="comment-reply-btn" onclick="replyToComment({{ $comment->id }}, '{{ addslashes($comment->author_name) }}')">
+                        <i class="fas fa-reply"></i>
+                        <span>Responder</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Comment Content -->
+            <div class="comment-content">
+                {!! nl2br(e($comment->content)) !!}
             </div>
         </div>
         
         <!-- Replies -->
         @if($comment->replies->count() > 0)
-            <div class="replies ms-4 mt-3">
+            <div class="comment-replies">
                 @include('blog.partials.comments', ['comments' => $comment->replies])
             </div>
         @endif

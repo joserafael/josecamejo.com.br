@@ -48,76 +48,116 @@
 
             <!-- Comments Section -->
             @if($post->allow_comments)
-                <section id="comments" class="mt-5">
-                    <h3 class="mb-4">
+                <section id="comments">
+                    <h3 class="comments-section-title">
                         <i class="fas fa-comments"></i> 
-                        Comentários ({{ $post->approvedComments->count() }})
+                        Comentários 
+                        <span class="comments-count">{{ $post->approvedComments->count() }}</span>
                     </h3>
 
-                    <!-- Comment Form -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5><i class="fas fa-plus"></i> Deixe seu comentário</h5>
+                    <!-- Modern Comment Form -->
+                    <div class="comment-form-container">
+                        <div class="comment-form-header">
+                            <h5 class="comment-form-title">
+                                <i class="fas fa-plus"></i> 
+                                Deixe seu comentário
+                            </h5>
                         </div>
-                        <div class="card-body">
+                        <div class="comment-form-body">
                             <form id="comment-form" method="POST" action="{{ route('comments.store') }}">
                                 @csrf
                                 <input type="hidden" name="blog_post_id" value="{{ $post->id }}">
                                 <input type="hidden" name="parent_id" id="parent_id" value="">
 
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group mb-3">
-                                            <label for="author_name">Nome <span class="text-danger">*</span></label>
-                                            <input type="text" name="author_name" id="author_name" class="form-control @error('author_name') is-invalid @enderror" value="{{ old('author_name') }}" required>
-                                            @error('author_name')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                <!-- Reply Notification -->
+                                <div id="reply-info" class="reply-notification">
+                                    <i class="fas fa-reply"></i> 
+                                    <span class="reply-notification-text">
+                                        Respondendo a: <span class="reply-notification-name" id="reply-to-name"></span>
+                                    </span>
+                                    <button type="button" class="cancel-reply-btn" onclick="cancelReply()">
+                                        <i class="fas fa-times"></i> Cancelar
+                                    </button>
+                                </div>
+
+                                <!-- Form Fields -->
+                                <div class="comment-form-row">
+                                    <div class="comment-form-group half-width with-icon">
+                                        <label for="author_name" class="comment-form-label">
+                                            Nome <span class="required">*</span>
+                                        </label>
+                                        <i class="comment-form-icon fas fa-user"></i>
+                                        <input type="text" 
+                                               name="author_name" 
+                                               id="author_name" 
+                                               class="comment-form-input @error('author_name') is-invalid @enderror" 
+                                               value="{{ old('author_name') }}" 
+                                               placeholder="Seu nome completo"
+                                               required>
+                                        @error('author_name')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group mb-3">
-                                            <label for="author_email">Email <span class="text-danger">*</span></label>
-                                            <input type="email" name="author_email" id="author_email" class="form-control @error('author_email') is-invalid @enderror" value="{{ old('author_email') }}" required>
-                                            @error('author_email')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                            <small class="form-text text-muted">Seu email não será publicado.</small>
+                                    <div class="comment-form-group half-width with-icon">
+                                        <label for="author_email" class="comment-form-label">
+                                            Email <span class="required">*</span>
+                                        </label>
+                                        <i class="comment-form-icon fas fa-envelope"></i>
+                                        <input type="email" 
+                                               name="author_email" 
+                                               id="author_email" 
+                                               class="comment-form-input @error('author_email') is-invalid @enderror" 
+                                               value="{{ old('author_email') }}" 
+                                               placeholder="seu@email.com"
+                                               required>
+                                        @error('author_email')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <div class="form-help-text">
+                                            <i class="fas fa-shield-alt"></i>
+                                            Seu email não será publicado
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="form-group mb-3">
-                                    <label for="author_website">Website</label>
-                                    <input type="url" name="author_website" id="author_website" class="form-control @error('author_website') is-invalid @enderror" value="{{ old('author_website') }}" placeholder="https://seusite.com">
+                                <div class="comment-form-group with-icon">
+                                    <label for="author_website" class="comment-form-label">Website</label>
+                                    <i class="comment-form-icon fas fa-globe"></i>
+                                    <input type="url" 
+                                           name="author_website" 
+                                           id="author_website" 
+                                           class="comment-form-input @error('author_website') is-invalid @enderror" 
+                                           value="{{ old('author_website') }}" 
+                                           placeholder="https://seusite.com">
                                     @error('author_website')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
-                                <div class="form-group mb-3">
-                                    <label for="content">Comentário <span class="text-danger">*</span></label>
-                                    <textarea name="content" id="content" rows="4" class="form-control @error('content') is-invalid @enderror" placeholder="Digite seu comentário..." required>{{ old('content') }}</textarea>
+                                <div class="comment-form-group">
+                                    <label for="content" class="comment-form-label">
+                                        Comentário <span class="required">*</span>
+                                    </label>
+                                    <textarea name="content" 
+                                              id="content" 
+                                              class="comment-form-textarea @error('content') is-invalid @enderror" 
+                                              placeholder="Compartilhe seus pensamentos sobre este post..."
+                                              required>{{ old('content') }}</textarea>
                                     @error('content')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
-                                <div id="reply-info" class="alert alert-info" style="display: none;">
-                                    <i class="fas fa-reply"></i> 
-                                    Respondendo a: <span id="reply-to-name"></span>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="cancelReply()">
-                                        <i class="fas fa-times"></i> Cancelar
-                                    </button>
-                                </div>
-
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">
+                                <div class="comment-form-actions">
+                                    <div class="comment-form-info">
                                         <i class="fas fa-info-circle"></i> 
-                                        Seu comentário será revisado antes da publicação.
-                                    </small>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-paper-plane"></i> Enviar Comentário
+                                        Seu comentário será revisado antes da publicação
+                                    </div>
+                                    <button type="submit" class="comment-submit-btn">
+                                        <span class="btn-text">
+                                            <i class="fas fa-paper-plane"></i> 
+                                            Enviar Comentário
+                                        </span>
                                     </button>
                                 </div>
                             </form>

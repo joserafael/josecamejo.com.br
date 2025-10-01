@@ -26,6 +26,7 @@
     <!-- Styles -->
     @vite(['resources/css/app.css'])
     <link rel="stylesheet" href="{{ asset('css/cookie-banner.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/comments.css') }}">
     
     <!-- Page Specific CSS -->
     @stack('styles')
