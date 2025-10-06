@@ -12,8 +12,8 @@
 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'José Rafael Camejo')</title>
-    <meta name="description" content="@yield('description', 'Desenvolvedor Full Stack especializado em Laravel, Vue.js e tecnologias modernas')">
+    <title>@yield('title', 'Blog - José Rafael Camejo')</title>
+    <meta name="description" content="@yield('description', 'Blog sobre desenvolvimento web, Laravel, Vue.js e tecnologias modernas')">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <!-- Fonts -->
@@ -28,6 +28,7 @@
     @vite(['resources/css/app.css'])
     <link rel="stylesheet" href="{{ asset('css/cookie-banner.css') }}">
     <link rel="stylesheet" href="{{ asset('css/comments.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/blog.css') }}">
     
     <!-- Page Specific CSS -->
     @stack('styles')
@@ -37,11 +38,24 @@
         <!-- Vue Components -->
         @stack('vue-components')
         
-        <!-- Header -->
-        @include('layouts.partials.header')
+        <!-- Blog Header (Simple Navigation) -->
+        <header class="blog-header">
+            <div class="container">
+                <nav class="blog-nav">
+                    <a href="{{ route('blog.index') }}" class="blog-logo">
+                        <i class="fas fa-blog"></i>
+                        Blog
+                    </a>
+                    <div class="blog-nav-links">
+                        <a href="{{ route('blog.index') }}">Todos os Posts</a>
+                        <a href="{{ route('home') }}">Voltar ao Site</a>
+                    </div>
+                </nav>
+            </div>
+        </header>
 
         <!-- Main Content -->
-        <main>
+        <main class="blog-main">
             @yield('content')
         </main>
 
@@ -51,6 +65,7 @@
     
     <!-- Scripts -->
     @vite(['resources/js/app.js'])
+    <script src="{{ asset('js/blog.js') }}"></script>
     
     <!-- Page Specific Scripts -->
     @stack('scripts')

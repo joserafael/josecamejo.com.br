@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BlogComment;
 use App\Models\BlogPost;
 use App\Http\Requests\StoreCommentRequest;
+use App\Services\CaptchaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 
@@ -17,12 +18,18 @@ class CommentController extends Controller
     {
         // Check if the blog post allows comments and is published
         if (!$blogPost->allow_comments || $blogPost->status !== 'published') {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Comments are not allowed for this post.'], 403);
+            }
             abort(403, 'Comments are not allowed for this post.');
         }
         
         // Rate limiting check
         $key = 'comment-submission:' . request()->ip();
         if (RateLimiter::tooManyAttempts($key, 3)) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Too many comment attempts. Please try again later.'], 429);
+            }
             abort(429, 'Too many comment attempts. Please try again later.');
         }
         
@@ -33,6 +40,9 @@ class CommentController extends Controller
         if (!empty($validated['parent_id'])) {
             $parentComment = BlogComment::find($validated['parent_id']);
             if (!$parentComment || $parentComment->blog_post_id != $blogPost->id) {
+                if ($request->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Invalid parent comment.'], 422);
+                }
                 return back()->withErrors(['parent_id' => 'Invalid parent comment.'])->withInput();
             }
         }
@@ -53,7 +63,18 @@ class CommentController extends Controller
             'status' => 'pending', // Comments start as pending
         ]);
 
-        return back()->with('success', 'Your comment has been submitted and is awaiting approval.');
+        // Clear the CAPTCHA from session after successful submission
+        session()->forget('captcha_result');
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Seu comentário foi enviado e está aguardando aprovação.',
+                'reload_comments' => true // Or determine if a reload is needed
+            ]);
+        }
+
+        return back()->with('success', 'Seu comentário foi enviado e está aguardando aprovação.');
     }
 
     /**

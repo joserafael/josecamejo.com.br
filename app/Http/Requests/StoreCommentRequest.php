@@ -6,6 +6,9 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Models\BlogPost;
 use App\Models\BlogComment;
 use Illuminate\Support\Facades\RateLimiter;
+use App\Services\CaptchaService;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 /**
  * @method mixed route(string $key = null)
@@ -113,6 +116,15 @@ class StoreCommentRequest extends FormRequest
                         $fail('Please avoid excessive repetition of characters.');
                     }
                 }
+            ],
+            'captcha_answer' => [
+                'required',
+                'integer',
+                function ($attribute, $value, $fail) {
+                    if (!CaptchaService::validate($value)) {
+                        $fail('A resposta da verificação matemática está incorreta.');
+                    }
+                }
             ]
         ];
     }
@@ -128,6 +140,8 @@ class StoreCommentRequest extends FormRequest
             'author_website.regex' => 'Please provide a valid website URL.',
             'content.min' => 'Comment must be at least 10 characters long.',
             'content.max' => 'Comment cannot exceed 2000 characters.',
+            'captcha_answer.required' => 'Por favor, resolva a verificação matemática.',
+            'captcha_answer.integer' => 'A resposta deve ser um número inteiro.',
         ];
     }
 
@@ -143,5 +157,26 @@ class StoreCommentRequest extends FormRequest
         throw new \Illuminate\Auth\Access\AuthorizationException(
             'You are not authorized to submit comments at this time.'
         );
+    }
+
+    /**
+     * Handle a failed validation attempt.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     * @return void
+     *
+     * @throws \Illuminate\Http\Exceptions\HttpResponseException
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        if ($this->expectsJson()) {
+            throw new HttpResponseException(response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422));
+        }
+
+        parent::failedValidation($validator);
     }
 }

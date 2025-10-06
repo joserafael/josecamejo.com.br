@@ -237,20 +237,26 @@
                             Visualizar
                         </a>
                         @if($comment->status !== 'approved')
-                            <a href="{{ route('admin.blog-comments.approve', $comment) }}" 
-                               class="action-btn action-approve" 
-                               onclick="return confirm('Aprovar este comentário?')">
-                                <i class="fas fa-check"></i>
-                                Aprovar
-                            </a>
+                            <form method="POST" action="{{ route('admin.blog-comments.approve', $comment) }}" style="display: inline;">
+                                @csrf
+                                <button type="submit" 
+                                        class="action-btn action-approve" 
+                                        onclick="return confirm('Aprovar este comentário?')">
+                                    <i class="fas fa-check"></i>
+                                    Aprovar
+                                </button>
+                            </form>
                         @endif
                         @if($comment->status !== 'rejected')
-                            <a href="{{ route('admin.blog-comments.reject', $comment) }}" 
-                               class="action-btn action-reject" 
-                               onclick="return confirm('Rejeitar este comentário?')">
-                                <i class="fas fa-times"></i>
-                                Rejeitar
-                            </a>
+                            <form method="POST" action="{{ route('admin.blog-comments.reject', $comment) }}" style="display: inline;">
+                                @csrf
+                                <button type="submit" 
+                                        class="action-btn action-reject" 
+                                        onclick="return confirm('Rejeitar este comentário?')">
+                                    <i class="fas fa-times"></i>
+                                    Rejeitar
+                                </button>
+                            </form>
                         @endif
                         <a href="{{ route('admin.blog-comments.edit', $comment) }}" class="action-btn action-edit">
                             <i class="fas fa-edit"></i>
