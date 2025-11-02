@@ -75,7 +75,7 @@ class BlogController extends Controller
     /**
      * Display the specified blog post
      */
-    public function show($slug)
+    public function show($locale, $slug)
     {
         $post = BlogPost::with([
                 'category', 
@@ -113,7 +113,7 @@ class BlogController extends Controller
     /**
      * Display posts by category
      */
-    public function category($slug)
+    public function category($locale, $slug)
     {
         $category = BlogCategory::where('slug', $slug)->firstOrFail();
         
@@ -130,7 +130,7 @@ class BlogController extends Controller
     /**
      * Display posts by tag
      */
-    public function tag($slug)
+    public function tag($locale, $slug)
     {
         $tag = BlogTag::where('slug', $slug)->firstOrFail();
         
