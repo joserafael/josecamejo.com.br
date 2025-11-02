@@ -15,8 +15,8 @@ class BlogController extends Controller
     public function index(Request $request)
     {
         $query = BlogPost::with(['category', 'subcategory', 'author', 'tags'])
-            ->where('status', 'published')
-            ->where('published_at', '<=', now());
+            ->published()
+            ->inLanguage();
 
         // Filter by category
         if ($request->has('category') && $request->category !== '') {
@@ -47,8 +47,7 @@ class BlogController extends Controller
         // Get categories with post counts
         $categories = BlogCategory::active()
             ->withCount(['posts' => function ($query) {
-                $query->where('status', 'published')
-                      ->where('published_at', '<=', now());
+                $query->published()->inLanguage();
             }])
             ->having('posts_count', '>', 0)
             ->orderBy('name')
@@ -57,16 +56,15 @@ class BlogController extends Controller
         // Get tags
         $tags = BlogTag::active()
             ->whereHas('posts', function ($query) {
-                $query->where('status', 'published')
-                      ->where('published_at', '<=', now());
+                $query->published()->inLanguage();
             })
             ->orderBy('name')
             ->get();
         
         // Get recent posts
         $recentPosts = BlogPost::with(['category'])
-            ->where('status', 'published')
-            ->where('published_at', '<=', now())
+            ->published()
+            ->inLanguage()
             ->orderBy('published_at', 'desc')
             ->limit(5)
             ->get();
@@ -90,14 +88,14 @@ class BlogController extends Controller
                 'approvedComments'
             ])
             ->where('slug', $slug)
-            ->where('status', 'published')
-            ->where('published_at', '<=', now())
+            ->published()
+            ->inLanguage()
             ->firstOrFail();
 
         // Get related posts
         $relatedPosts = BlogPost::with(['category', 'author'])
-            ->where('status', 'published')
-            ->where('published_at', '<=', now())
+            ->published()
+            ->inLanguage($post->language)
             ->where('id', '!=', $post->id)
             ->where(function ($query) use ($post) {
                 $query->where('blog_category_id', $post->blog_category_id)
@@ -120,9 +118,9 @@ class BlogController extends Controller
         $category = BlogCategory::where('slug', $slug)->firstOrFail();
         
         $posts = BlogPost::with(['category', 'subcategory', 'author', 'tags'])
-            ->where('status', 'published')
-            ->where('published_at', '<=', now())
-            ->where('blog_category_id', $category->id)
+            ->published()
+            ->inLanguage()
+            ->byCategory($category->id)
             ->orderBy('published_at', 'desc')
             ->paginate(12);
 
@@ -137,8 +135,8 @@ class BlogController extends Controller
         $tag = BlogTag::where('slug', $slug)->firstOrFail();
         
         $posts = BlogPost::with(['category', 'subcategory', 'author', 'tags'])
-            ->where('status', 'published')
-            ->where('published_at', '<=', now())
+            ->published()
+            ->inLanguage()
             ->whereHas('tags', function ($q) use ($tag) {
                 $q->where('blog_tags.id', $tag->id);
             })

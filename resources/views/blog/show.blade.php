@@ -15,7 +15,7 @@
                         <i class="fas fa-calendar"></i> {{ $post->published_at->format('d/m/Y H:i') }}
                         @if($post->category)
                             | <i class="fas fa-folder"></i> 
-                            <a href="{{ route('blog.category', $post->category->slug) }}" class="text-decoration-none">
+                            <a href="{{ route('blog.category', ['locale' => app()->getLocale(), 'slug' => $post->category->slug]) }}" class="text-decoration-none">
                                 {{ $post->category->name }}
                             </a>
                         @endif
@@ -27,7 +27,7 @@
                     @if($post->tags->count() > 0)
                         <div class="mb-3">
                             @foreach($post->tags as $tag)
-                                <a href="{{ route('blog.tag', $tag->slug) }}" class="badge badge-secondary text-decoration-none me-1">
+                                <a href="{{ route('blog.tag', ['locale' => app()->getLocale(), 'slug' => $tag->slug]) }}" class="badge badge-secondary text-decoration-none me-1">
                                     {{ $tag->name }}
                                 </a>
                             @endforeach
@@ -223,7 +223,7 @@
                                     <img src="{{ asset('storage/' . $relatedPost->featured_image) }}" class="img-fluid rounded mb-2" alt="{{ $relatedPost->title }}" style="height: 100px; width: 100%; object-fit: cover;">
                                 @endif
                                 <h6>
-                                    <a href="{{ route('blog.show', $relatedPost->slug) }}" class="text-decoration-none">
+                                    <a href="{{ route('blog.show', ['locale' => app()->getLocale(), 'slug' => $relatedPost->slug]) }}" class="text-decoration-none">
                                         {{ Str::limit($relatedPost->title, 60) }}
                                     </a>
                                 </h6>
@@ -263,7 +263,7 @@
             <!-- Back to Blog -->
             <div class="sidebar-section">
                 <div class="sidebar-content text-center">
-                    <a href="{{ route('blog.index') }}" class="btn-back-to-blog">
+                    <a href="{{ route('blog.index', ['locale' => app()->getLocale()]) }}" class="btn-back-to-blog">
                         <i class="fas fa-arrow-left"></i> Voltar ao Blog
                     </a>
                 </div>

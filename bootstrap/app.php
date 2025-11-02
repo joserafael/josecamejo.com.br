@@ -16,11 +16,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'locale' => \App\Http\Middleware\SetLocale::class,
         ]);
-        
-        // Apply SetLocale middleware globally to web routes
-        $middleware->web(append: [
-            \App\Http\Middleware\SetLocale::class,
-        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

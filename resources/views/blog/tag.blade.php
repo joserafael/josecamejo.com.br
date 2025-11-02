@@ -1,0 +1,68 @@
+@extends('layouts.blog')
+
+@section('title', 'Tag: ' . $tag->name . ' - Blog')
+
+@section('content')
+    <div class="blog-container">
+        <div class="blog-main-content">
+            <div class="mb-4">
+                <h1><i class="fas fa-tag"></i> {{ $tag->name }}</h1>
+                @if($tag->description)
+                    <p class="text-muted">{{ $tag->description }}</p>
+                @endif
+            </div>
+
+            @if($posts->count() > 0)
+                <div class="row">
+                    @foreach($posts as $post)
+                        <div class="col-md-6 mb-4">
+                            <article class="blog-post-card">
+                                @if($post->featured_image)
+                                    <img src="{{ asset('storage/' . $post->featured_image) }}" class="blog-post-image" alt="{{ $post->title }}">
+                                @endif
+                                
+                                <div class="blog-post-content">
+                                    <h2 class="blog-post-title">
+                                        <a href="{{ route('blog.show', ['locale' => app()->getLocale(), 'slug' => $post->slug]) }}">
+                                            {{ $post->title }}
+                                        </a>
+                                    </h2>
+                                    
+                                    <div class="blog-post-excerpt">
+                                        {{ Str::limit(strip_tags($post->content), 150) }}
+                                    </div>
+                                    
+                                    <div class="blog-post-meta">
+                                        <div class="blog-post-date">
+                                            <i class="fas fa-calendar"></i>
+                                            {{ $post->published_at->format('d/m/Y') }}
+                                        </div>
+                                        @if($post->category)
+                                            <a href="{{ route('blog.category', ['locale' => app()->getLocale(), 'slug' => $post->category->slug]) }}" class="blog-post-category">
+                                                {{ $post->category->name }}
+                                            </a>
+                                        @endif
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="mt-4">
+                    {{ $posts->links() }}
+                </div>
+            @else
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No hay posts con esta etiqueta.
+                </div>
+            @endif
+
+            <div class="mt-4">
+                <a href="{{ route('blog.index', ['locale' => app()->getLocale()]) }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver al Blog
+                </a>
+            </div>
+        </div>
+    </div>
+@endsection

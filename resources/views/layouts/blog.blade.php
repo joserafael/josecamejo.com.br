@@ -42,12 +42,12 @@
         <header class="blog-header">
             <div class="container">
                 <nav class="blog-nav">
-                    <a href="{{ route('blog.index') }}" class="blog-logo">
+                    <a href="{{ route('blog.index', ['locale' => app()->getLocale()]) }}" class="blog-logo">
                         <i class="fas fa-blog"></i>
                         Blog
                     </a>
                     <div class="blog-nav-links">
-                        <a href="{{ route('blog.index') }}">Todos os Posts</a>
+                        <a href="{{ route('blog.index', ['locale' => app()->getLocale()]) }}">Todos os Posts</a>
                         <a href="{{ route('home') }}">Voltar ao Site</a>
                     </div>
                 </nav>
