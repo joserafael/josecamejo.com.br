@@ -85,7 +85,7 @@
     <section id="contact" class="contact">
         <div class="container">
             <h2 class="section-title">{{ __('messages.get_in_touch') }}</h2>
-            <p>{{ __('messages.contact_description') }}</p>
+            <p class="contact-description">{{ __('messages.contact_description') }}</p>
             
             <!-- Contact Form -->
             <div class="contact-content">
