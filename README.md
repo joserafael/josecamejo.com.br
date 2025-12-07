@@ -1,10 +1,10 @@
-# Jose Camejo - Portfolio & Blog
+# Jose Camejo - Personal Website & Blog
 
-A modern, multilingual portfolio and blog platform built with Laravel 12, featuring a comprehensive content management system and an intuitive administrative interface.
+A modern, multilingual personal landing page and blog platform built with Laravel 12, featuring a comprehensive content management system and an intuitive administrative interface.
 
 ## About This Project
 
-This is a full-featured personal portfolio and blog website that showcases projects, articles, and professional content across three languages. Built with Laravel 12 and modern frontend technologies, it provides a robust platform for content creation and audience engagement.
+This is a full-featured personal website with a landing page and blog that showcases articles and professional content across three languages. Built with Laravel 12 and modern frontend technologies, it provides a robust platform for content creation and audience engagement.
 
 ## Key Features
 
