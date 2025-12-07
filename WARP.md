@@ -4,7 +4,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 
 ## Project Overview
 
-This is a personal portfolio and blog website built with Laravel 12 (PHP 8.2+), featuring multilingual support (English, Spanish, Portuguese), a full blog system with comments, and an administrative panel. The frontend uses Vue 3, Alpine.js, and Tailwind CSS 4.
+This is a personal landing page  and blog website built with Laravel 12 (PHP 8.2+), featuring multilingual support (English, Spanish, Portuguese), a full blog system with comments, and an administrative panel. The frontend uses Vue 3, Alpine.js, and Tailwind CSS 4.
 
 ## Common Commands
 
@@ -125,8 +125,7 @@ Videos are managed through a complete CRUD system:
 
 ### Admin Panel Structure
 Controllers are organized in `app/Http/Controllers/Admin/`:
-- **PostController**: Portfolio posts/projects
-- **ProjectController**: Featured projects
+
 - **BlogPostController**: Blog article management
 - **BlogCategoryController**: Blog categories
 - **BlogSubcategoryController**: Blog subcategories
