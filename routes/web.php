@@ -52,7 +52,7 @@ foreach (['en', 'es', 'pt'] as $locale) {
 // Blog Routes with locale prefix
 Route::pattern('locale', 'en|es|pt');
 
-Route::prefix('{locale}/blog')->name('blog.')->middleware('locale')->group(function () {
+Route::prefix('{locale}/blog')->name('blog.')->group(function () {
     Route::get('/', [BlogController::class, 'index'])->name('index');
     Route::get('/category/{slug}', [BlogController::class, 'category'])->name('category');
     Route::get('/tag/{slug}', [BlogController::class, 'tag'])->name('tag');

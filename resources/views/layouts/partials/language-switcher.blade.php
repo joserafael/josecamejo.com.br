@@ -28,7 +28,7 @@
         @foreach($languages as $language)
             <li>
                 <a class="language-item {{ $language['active'] ? 'active' : '' }}" 
-                   href="{{ route('language.switch', $language['code']) }}">
+                   href="{{ $language['url'] }}">
                     <span class="flag-icon">
                         @switch($language['code'])
                             @case('en')
