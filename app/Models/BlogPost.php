@@ -210,13 +210,7 @@ class BlogPost extends Model
         return $query->where('blog_category_id', $categoryId);
     }
 
-    /**
-     * Get the route key for the model
-     */
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
+
 
     /**
      * Get the excerpt or truncated content

@@ -252,7 +252,7 @@
                         <div class="info-item">
                             <span class="info-label">Subcategoria:</span>
                             <span class="info-value">
-                                <a href="{{ route('admin.blog.subcategories.show', $blogPost->subcategory) }}" class="link">
+                                <a href="{{ route('admin.blog-subcategories.show', $blogPost->subcategory) }}" class="link">
                                     {{ $blogPost->subcategory->name }}
                                 </a>
                             </span>
