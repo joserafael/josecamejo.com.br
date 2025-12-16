@@ -11,36 +11,8 @@
                     </a>
                 </li>
 
-                <!-- Content Management -->
-                <li class="nav-item">
-                    <div class="nav-group">
-                        <div class="nav-group-header">
-                            <i class="fas fa-edit"></i>
-                            <span>Conteúdo</span>
-                        </div>
-                    </div>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="{{ route('admin.posts.index') }}" class="nav-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
-                        <i class="fas fa-file-alt"></i>
-                        <span>Posts</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('admin.projects.index') }}" class="nav-link {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
-                        <i class="fas fa-folder-open"></i>
-                        <span>Projetos</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('admin.skills.index') }}" class="nav-link {{ request()->routeIs('admin.skills.*') ? 'active' : '' }}">
-                        <i class="fas fa-code"></i>
-                        <span>Habilidades</span>
-                    </a>
-                </li>
+               
+               
 
                 <!-- Blog Management -->
                 <li class="nav-item">
