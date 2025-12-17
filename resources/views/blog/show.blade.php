@@ -85,7 +85,7 @@
                                         <label for="author_name" class="comment-form-label">
                                             {{ __('blog.name') }} <span class="required">*</span>
                                         </label>
-                                        <i class="comment-form-icon fas fa-user"></i>
+                                    
                                         <input type="text" 
                                                name="author_name" 
                                                id="author_name" 
@@ -101,7 +101,6 @@
                                         <label for="author_email" class="comment-form-label">
                                             {{ __('blog.email') }} <span class="required">*</span>
                                         </label>
-                                        <i class="comment-form-icon fas fa-envelope"></i>
                                         <input type="email" 
                                                name="author_email" 
                                                id="author_email" 
@@ -121,7 +120,7 @@
 
                                 <div class="comment-form-group with-icon">
                                     <label for="author_website" class="comment-form-label">{{ __('blog.website') }}</label>
-                                    <i class="comment-form-icon fas fa-globe"></i>
+                                  
                                     <input type="url" 
                                            name="author_website" 
                                            id="author_website" 
