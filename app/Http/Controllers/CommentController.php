@@ -50,6 +50,13 @@ class CommentController extends Controller
         // Hit rate limiter
         RateLimiter::hit($key, 300); // 5 minutes
 
+        // Check if the author has previously approved comments
+        $hasApprovedComments = BlogComment::where('author_email', $validated['author_email'])
+            ->where('status', 'approved')
+            ->exists();
+            
+        $status = $hasApprovedComments ? 'approved' : 'pending';
+
         // Create the comment
         $comment = BlogComment::create([
             'blog_post_id' => $blogPost->id,
@@ -60,21 +67,29 @@ class CommentController extends Controller
             'content' => $validated['content'],
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
-            'status' => 'pending', // Comments start as pending
+            'status' => $status,
         ]);
 
         // Clear the CAPTCHA from session after successful submission
         session()->forget('captcha_result');
 
+        $message = $status === 'approved' 
+            ? 'Seu comentário foi publicado com sucesso!' 
+            : 'Seu comentário foi enviado e está aguardando aprovação.';
+
         if ($request->expectsJson()) {
+            if ($status === 'approved') {
+                session()->flash('success', $message);
+            }
+            
             return response()->json([
                 'success' => true,
-                'message' => 'Seu comentário foi enviado e está aguardando aprovação.',
-                'reload_comments' => false // Don't reload for pending comments so message stays visible
+                'message' => $message,
+                'reload_comments' => $status === 'approved'
             ]);
         }
 
-        return back()->with('success', 'Seu comentário foi enviado e está aguardando aprovação.');
+        return back()->with('success', $message);
     }
 
     /**
