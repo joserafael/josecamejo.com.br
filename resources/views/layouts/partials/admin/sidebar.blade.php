@@ -32,6 +32,13 @@
                 </li>
 
                 <li class="nav-item">
+                    <a href="{{ route('admin.blog-comments.index') }}" class="nav-link {{ request()->routeIs('admin.blog-comments.*') ? 'active' : '' }}">
+                        <i class="fas fa-comments"></i>
+                        <span>Comentários</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
                     <a href="{{ route('admin.blog-categories.index') }}" class="nav-link {{ request()->routeIs('admin.blog-categories.*') ? 'active' : '' }}">
                         <i class="fas fa-folder"></i>
                         <span>Categorias</span>

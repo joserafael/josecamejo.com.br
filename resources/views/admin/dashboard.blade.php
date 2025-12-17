@@ -171,6 +171,10 @@
                         <i class="fas fa-user-plus"></i>
                         <span>Novo Usuário</span>
                     </a>
+                    <a href="{{ route('admin.blog-comments.index') }}" class="quick-action">
+                        <i class="fas fa-comments"></i>
+                        <span>Comentários</span>
+                    </a>
                     <a href="{{ route('admin.backup') }}" class="quick-action">
                         <i class="fas fa-download"></i>
                         <span>Backup</span>
