@@ -260,6 +260,8 @@
                 </div>
             </div>
 
+            @include('blog.partials.sidebar')
+
             <!-- Back to Blog -->
             <div class="sidebar-section">
                 <div class="sidebar-content text-center">

@@ -44,32 +44,9 @@ class BlogController extends Controller
 
         $posts = $query->orderBy('published_at', 'desc')->paginate(12);
         
-        // Get categories with post counts
-        $categories = BlogCategory::active()
-            ->withCount(['posts' => function ($query) {
-                $query->published()->inLanguage();
-            }])
-            ->having('posts_count', '>', 0)
-            ->orderBy('name')
-            ->get();
-        
-        // Get tags
-        $tags = BlogTag::active()
-            ->whereHas('posts', function ($query) {
-                $query->published()->inLanguage();
-            })
-            ->orderBy('name')
-            ->get();
-        
-        // Get recent posts
-        $recentPosts = BlogPost::with(['category'])
-            ->published()
-            ->inLanguage()
-            ->orderBy('published_at', 'desc')
-            ->limit(5)
-            ->get();
+        $sidebarData = $this->getSidebarData();
 
-        return view('blog.index', compact('posts', 'categories', 'tags', 'recentPosts'));
+        return view('blog.index', array_merge(compact('posts'), $sidebarData));
     }
 
     /**
@@ -83,7 +60,7 @@ class BlogController extends Controller
                 'author', 
                 'tags', 
                 'images', 
-                'videos',
+                'videos', 
                 'topLevelComments.replies.replies',
                 'approvedComments'
             ])
@@ -107,7 +84,9 @@ class BlogController extends Controller
             ->limit(3)
             ->get();
 
-        return view('blog.show', compact('post', 'relatedPosts'));
+        $sidebarData = $this->getSidebarData();
+
+        return view('blog.show', array_merge(compact('post', 'relatedPosts'), $sidebarData));
     }
 
     /**
@@ -124,7 +103,9 @@ class BlogController extends Controller
             ->orderBy('published_at', 'desc')
             ->paginate(12);
 
-        return view('blog.category', compact('posts', 'category'));
+        $sidebarData = $this->getSidebarData();
+
+        return view('blog.category', array_merge(compact('posts', 'category'), $sidebarData));
     }
 
     /**
@@ -143,6 +124,36 @@ class BlogController extends Controller
             ->orderBy('published_at', 'desc')
             ->paginate(12);
 
-        return view('blog.tag', compact('posts', 'tag'));
+        $sidebarData = $this->getSidebarData();
+
+        return view('blog.tag', array_merge(compact('posts', 'tag'), $sidebarData));
+    }
+
+    /**
+     * Get data for sidebar
+     */
+    private function getSidebarData()
+    {
+        return [
+            'categories' => BlogCategory::active()
+                ->withCount(['posts' => function ($query) {
+                    $query->published()->inLanguage();
+                }])
+                ->having('posts_count', '>', 0)
+                ->orderBy('name')
+                ->get(),
+            'tags' => BlogTag::active()
+                ->whereHas('posts', function ($query) {
+                    $query->published()->inLanguage();
+                })
+                ->orderBy('name')
+                ->get(),
+            'recentPosts' => BlogPost::with(['category'])
+                ->published()
+                ->inLanguage()
+                ->orderBy('published_at', 'desc')
+                ->limit(5)
+                ->get()
+        ];
     }
 }
