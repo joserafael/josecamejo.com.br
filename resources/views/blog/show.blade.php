@@ -9,7 +9,7 @@
             <!-- Blog Post -->
             <article class="mb-5">
                 <header class="mb-4">
-                    <h1 class="mb-3">{{ $post->title }}</h1>
+                    <h1 class="mb-3 blog-post-title-main">{{ $post->title }}</h1>
                     
                     <div class="text-muted mb-3">
                         <i class="fas fa-calendar"></i> {{ $post->published_at->format('d/m/Y H:i') }}
