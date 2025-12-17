@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GOOGLE_ANALYTICS_ID') }}"></script>
@@ -12,8 +12,8 @@
 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Blog - José Rafael Camejo')</title>
-    <meta name="description" content="@yield('description', 'Blog sobre desenvolvimento web, Laravel, Vue.js e tecnologias modernas')">
+    <title>@yield('title', __('blog.title') . ' - José Rafael Camejo')</title>
+    <meta name="description" content="@yield('description', __('blog.description'))">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Fonts -->
@@ -44,11 +44,11 @@
                 <nav class="blog-nav">
                     <a href="{{ route('blog.index', ['locale' => app()->getLocale()]) }}" class="blog-logo">
 
-                        Blog
+                        {{ __('blog.title') }}
                     </a>
                     <div class="blog-nav-links">
-                        <a href="{{ route('blog.index', ['locale' => app()->getLocale()]) }}">Todos os Posts</a>
-                        <a href="{{ route('home') }}">Voltar ao Site</a>
+                        <a href="{{ route('blog.index', ['locale' => app()->getLocale()]) }}">{{ __('blog.all_posts') }}</a>
+                        <a href="{{ route('home') }}">{{ __('blog.back_to_site') }}</a>
                     </div>
                 </nav>
             </div>

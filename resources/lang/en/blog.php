@@ -41,4 +41,7 @@ return [
     'share' => 'Share',
     'reply_to_user' => 'Reply to',
     'reply' => 'Reply',
+    'description' => 'Blog about web development, Laravel, Vue.js and modern technologies',
+    'all_posts' => 'All Posts',
+    'back_to_site' => 'Back to Site',
 ];

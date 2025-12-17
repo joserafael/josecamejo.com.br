@@ -41,4 +41,7 @@ return [
     'share' => 'Compartilhar',
     'reply_to_user' => 'Resposta para',
     'reply' => 'Responder',
+    'description' => 'Blog sobre desenvolvimento web, Laravel, Vue.js e tecnologias modernas',
+    'all_posts' => 'Todos os Posts',
+    'back_to_site' => 'Voltar ao Site',
 ];

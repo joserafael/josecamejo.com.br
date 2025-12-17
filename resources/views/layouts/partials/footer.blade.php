@@ -1,8 +1,8 @@
 <footer class="footer">
     <div class="container">
-        <p>&copy; {{ date('Y') }} {{ isset($data['name']) ? $data['name'] : 'José Rafael Camejo' }}. Todos os direitos reservados.</p>
+        <p>&copy; {{ date('Y') }} {{ isset($data['name']) ? $data['name'] : 'José Rafael Camejo' }}. {{ __('messages.all_rights_reserved') }}</p>
         <p>
-            <a href="{{ route('privacy.policy') }}" class="privacy-link">Política de Privacidade</a>
+            <a href="{{ route('privacy.policy') }}" class="privacy-link">{{ __('messages.privacy_policy_title') }}</a>
         </p>
     </div>
 </footer>
