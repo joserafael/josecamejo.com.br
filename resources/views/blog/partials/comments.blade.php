@@ -26,7 +26,7 @@
                         @if($comment->isReply())
                             <span class="comment-reply-info">
                                 <i class="fas fa-reply"></i> 
-                                Resposta para {{ $comment->parent->author_name }}
+                                {{ __('blog.reply_to_user') }} {{ $comment->parent->author_name }}
                             </span>
                         @endif
                     </div>
@@ -36,7 +36,7 @@
                 <div class="comment-actions">
                     <button type="button" class="comment-reply-btn" onclick="replyToComment({{ $comment->id }}, '{{ addslashes($comment->author_name) }}')">
                         <i class="fas fa-reply"></i>
-                        <span>Responder</span>
+                        <span>{{ __('blog.reply') }}</span>
                     </button>
                 </div>
             </div>

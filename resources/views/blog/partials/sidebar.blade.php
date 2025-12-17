@@ -1,9 +1,9 @@
 <!-- Search -->
     <div class="sidebar-section">
-        <h3 class="sidebar-title"><i class="fas fa-search"></i> Buscar</h3>
+        <h3 class="sidebar-title"><i class="fas fa-search"></i> {{ __('blog.search') }}</h3>
         <form method="GET" action="{{ route('blog.index', ['locale' => app()->getLocale()]) }}">
             <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Buscar posts..." value="{{ request('search') }}">
+                <input type="text" name="search" class="form-control" placeholder="{{ __('blog.search_placeholder') }}" value="{{ request('search') }}">
                 <button class="btn btn-primary" type="submit">
                     <i class="fas fa-search"></i>
                 </button>
@@ -14,7 +14,7 @@
     <!-- Categories -->
     @if(isset($categories) && $categories->count() > 0)
         <div class="sidebar-section">
-            <h3 class="sidebar-title"><i class="fas fa-folder"></i> Categorias</h3>
+            <h3 class="sidebar-title"><i class="fas fa-folder"></i> {{ __('blog.categories') }}</h3>
             <ul class="sidebar-list">
                 @foreach($categories as $category)
                     <li>
@@ -31,7 +31,7 @@
     <!-- Tags -->
     @if(isset($tags) && $tags->count() > 0)
         <div class="sidebar-section">
-            <h3 class="sidebar-title"><i class="fas fa-tags"></i> Tags</h3>
+            <h3 class="sidebar-title"><i class="fas fa-tags"></i> {{ __('blog.tags') }}</h3>
             <div>
                 @foreach($tags as $tag)
                     <a href="{{ route('blog.tag', ['locale' => app()->getLocale(), 'slug' => $tag->slug]) }}" class="badge badge-secondary text-decoration-none me-1 mb-1">
@@ -45,7 +45,7 @@
     <!-- Recent Posts -->
     @if(isset($recentPosts) && $recentPosts->count() > 0)
         <div class="sidebar-section">
-            <h3 class="sidebar-title"><i class="fas fa-clock"></i> Posts Recentes</h3>
+            <h3 class="sidebar-title"><i class="fas fa-clock"></i> {{ __('blog.recent_posts') }}</h3>
             <ul class="sidebar-list">
                 @foreach($recentPosts as $recentPost)
                     <li>

@@ -51,7 +51,7 @@
                 <section id="comments">
                     <h3 class="comments-section-title">
                         <i class="fas fa-comments"></i> 
-                        Comentários 
+                        {{ __('blog.comments') }} 
                         <span class="comments-count">{{ $post->approvedComments->count() }}</span>
                     </h3>
 
@@ -60,7 +60,7 @@
                         <div class="comment-form-header">
                             <h5 class="comment-form-title">
                                 <i class="fas fa-plus"></i> 
-                                Deixe seu comentário
+                                {{ __('blog.leave_comment') }}
                             </h5>
                         </div>
                         <div class="comment-form-body">
@@ -72,10 +72,10 @@
                                 <div id="reply-info" class="reply-notification">
                                     <i class="fas fa-reply"></i> 
                                     <span class="reply-notification-text">
-                                        Respondendo a: <span class="reply-notification-name" id="reply-to-name"></span>
+                                        {{ __('blog.replying_to') }} <span class="reply-notification-name" id="reply-to-name"></span>
                                     </span>
                                     <button type="button" class="cancel-reply-btn" onclick="cancelReply()">
-                                        <i class="fas fa-times"></i> Cancelar
+                                        <i class="fas fa-times"></i> {{ __('blog.cancel') }}
                                     </button>
                                 </div>
 
@@ -83,7 +83,7 @@
                                 <div class="comment-form-row">
                                     <div class="comment-form-group half-width with-icon">
                                         <label for="author_name" class="comment-form-label">
-                                            Nome <span class="required">*</span>
+                                            {{ __('blog.name') }} <span class="required">*</span>
                                         </label>
                                         <i class="comment-form-icon fas fa-user"></i>
                                         <input type="text" 
@@ -91,7 +91,7 @@
                                                id="author_name" 
                                                class="comment-form-input @error('author_name') is-invalid @enderror" 
                                                value="{{ old('author_name') }}" 
-                                               placeholder="Seu nome completo"
+                                               placeholder="{{ __('blog.name_placeholder') }}"
                                                required>
                                         @error('author_name')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -99,7 +99,7 @@
                                     </div>
                                     <div class="comment-form-group half-width with-icon">
                                         <label for="author_email" class="comment-form-label">
-                                            Email <span class="required">*</span>
+                                            {{ __('blog.email') }} <span class="required">*</span>
                                         </label>
                                         <i class="comment-form-icon fas fa-envelope"></i>
                                         <input type="email" 
@@ -107,27 +107,27 @@
                                                id="author_email" 
                                                class="comment-form-input @error('author_email') is-invalid @enderror" 
                                                value="{{ old('author_email') }}" 
-                                               placeholder="seu@email.com"
+                                               placeholder="{{ __('blog.email_placeholder') }}"
                                                required>
                                         @error('author_email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                         <div class="form-help-text">
                                             <i class="fas fa-shield-alt"></i>
-                                            Seu email não será publicado
+                                            {{ __('blog.email_privacy') }}
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="comment-form-group with-icon">
-                                    <label for="author_website" class="comment-form-label">Website</label>
+                                    <label for="author_website" class="comment-form-label">{{ __('blog.website') }}</label>
                                     <i class="comment-form-icon fas fa-globe"></i>
                                     <input type="url" 
                                            name="author_website" 
                                            id="author_website" 
                                            class="comment-form-input @error('author_website') is-invalid @enderror" 
                                            value="{{ old('author_website') }}" 
-                                           placeholder="https://seusite.com">
+                                           placeholder="{{ __('blog.website_placeholder') }}">
                                     @error('author_website')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -135,12 +135,12 @@
 
                                 <div class="comment-form-group">
                                     <label for="content" class="comment-form-label">
-                                        Comentário <span class="required">*</span>
+                                        {{ __('blog.comment') }} <span class="required">*</span>
                                     </label>
                                     <textarea name="content" 
                                               id="content" 
                                               class="comment-form-textarea @error('content') is-invalid @enderror" 
-                                              placeholder="Compartilhe seus pensamentos sobre este post..."
+                                              placeholder="{{ __('blog.comment_placeholder') }}"
                                               required>{{ old('content') }}</textarea>
                                     @error('content')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -150,7 +150,7 @@
                                 <!-- CAPTCHA Field -->
                                 <div class="comment-form-group">
                                     <label for="captcha_answer" class="comment-form-label">
-                                        Verificação <span class="required">*</span>
+                                        {{ __('blog.verification') }} <span class="required">*</span>
                                     </label>
                                     <div class="captcha-container">
                                         <span class="captcha-question" id="captchaQuestion">Carregando...</span>
@@ -158,7 +158,7 @@
                                                id="captcha_answer" 
                                                name="captcha_answer" 
                                                class="comment-form-input @error('captcha_answer') is-invalid @enderror" 
-                                               placeholder="Sua resposta"
+                                               placeholder="{{ __('blog.captcha_placeholder') }}"
                                                required>
                                         <button type="button" class="captcha-refresh" id="refreshCaptcha" title="Gerar nova pergunta">
                                             <i class="fas fa-sync-alt"></i>
@@ -169,19 +169,19 @@
                                     @enderror
                                     <div class="form-help-text">
                                         <i class="fas fa-shield-alt"></i>
-                                        Resolva a operação matemática para verificar que você é humano
+                                        {{ __('blog.captcha_help') }}
                                     </div>
                                 </div>
 
                                 <div class="comment-form-actions">
                                     <div class="comment-form-info">
                                         <i class="fas fa-info-circle"></i> 
-                                        Seu comentário será revisado antes da publicação
+                                        {{ __('blog.comment_review_notice') }}
                                     </div>
                                     <button type="submit" class="comment-submit-btn">
                                         <span class="btn-text">
                                             <i class="fas fa-paper-plane"></i> 
-                                            Enviar Comentário
+                                            {{ __('blog.submit_comment') }}
                                         </span>
                                     </button>
                                 </div>
@@ -197,14 +197,14 @@
                     @if($post->approvedComments->count() == 0)
                         <div class="text-center py-4">
                             <i class="fas fa-comment fa-2x text-muted mb-3"></i>
-                            <p class="text-muted">Seja o primeiro a comentar!</p>
+                            <p class="text-muted">{{ __('blog.be_first_comment') }}</p>
                         </div>
                     @endif
                 </section>
             @else
                 <div class="alert alert-info mt-5">
                     <i class="fas fa-info-circle"></i> 
-                    Os comentários estão desabilitados para este post.
+                    {{ __('blog.comments_disabled') }}
                 </div>
             @endif
         </div>
@@ -214,7 +214,7 @@
             @if($relatedPosts->count() > 0)
                 <div class="sidebar-section">
                     <h3 class="sidebar-title">
-                        <i class="fas fa-newspaper"></i> Posts Relacionados
+                        <i class="fas fa-newspaper"></i> {{ __('blog.related_posts') }}
                     </h3>
                     <div class="sidebar-content">
                         @foreach($relatedPosts as $relatedPost)
@@ -240,7 +240,7 @@
             <!-- Share -->
             <div class="sidebar-section">
                 <h3 class="sidebar-title">
-                    <i class="fas fa-share-alt"></i> Compartilhar
+                    <i class="fas fa-share-alt"></i> {{ __('blog.share') }}
                 </h3>
                 <div class="sidebar-content">
                     <div class="share-buttons">
@@ -266,7 +266,7 @@
             <div class="sidebar-section">
                 <div class="sidebar-content text-center">
                     <a href="{{ route('blog.index', ['locale' => app()->getLocale()]) }}" class="btn-back-to-blog">
-                        <i class="fas fa-arrow-left"></i> Voltar ao Blog
+                        <i class="fas fa-arrow-left"></i> {{ __('blog.back_to_blog') }}
                     </a>
                 </div>
             </div>

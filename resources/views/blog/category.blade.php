@@ -50,13 +50,13 @@
                     </div>
                 @else
                     <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i> No hay posts en esta categoría.
+                        <i class="fas fa-info-circle"></i> {{ __('blog.no_posts_in_category') }}
                     </div>
                 @endif
 
                 <div class="mt-4">
                     <a href="{{ route('blog.index', ['locale' => app()->getLocale()]) }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left"></i> Volver al Blog
+                        <i class="fas fa-arrow-left"></i> {{ __('blog.back_to_blog') }}
                     </a>
                 </div>
             </div>
