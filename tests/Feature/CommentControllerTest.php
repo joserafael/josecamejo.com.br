@@ -30,17 +30,20 @@ class CommentControllerTest extends TestCase
     /** @test */
     public function it_can_store_a_valid_comment()
     {
+        session(['captcha_result' => 10]);
+
         $commentData = [
             'author_name' => 'John Doe',
             'author_email' => 'john@example.com',
             'author_website' => 'https://johndoe.com',
-            'content' => 'This is a test comment with enough content to pass validation.'
+            'content' => 'This is a test comment with enough content to pass validation.',
+            'captcha_answer' => 10
         ];
 
         $response = $this->post(route('comments.store', $this->blogPost), $commentData);
 
         $response->assertRedirect();
-        $response->assertSessionHas('success', 'Your comment has been submitted and is awaiting approval.');
+        $response->assertSessionHas('success', 'Seu comentário foi enviado e está aguardando aprovação.');
 
         $this->assertDatabaseHas('blog_comments', [
             'blog_post_id' => $this->blogPost->id,
@@ -61,11 +64,14 @@ class CommentControllerTest extends TestCase
             'status' => 'approved'
         ]);
 
+        session(['captcha_result' => 10]);
+
         $replyData = [
             'parent_id' => $parentComment->id,
             'author_name' => 'Jane Doe',
             'author_email' => 'jane@example.com',
-            'content' => 'This is a reply to the parent comment with sufficient content.'
+            'content' => 'This is a reply to the parent comment with sufficient content.',
+            'captcha_answer' => 10
         ];
 
         $response = $this->post(route('comments.store', $this->blogPost), $replyData);
@@ -87,16 +93,19 @@ class CommentControllerTest extends TestCase
     {
         $response = $this->post(route('comments.store', $this->blogPost), []);
 
-        $response->assertSessionHasErrors(['author_name', 'author_email', 'content']);
+        $response->assertSessionHasErrors(['author_name', 'author_email', 'content', 'captcha_answer']);
     }
 
     /** @test */
     public function it_validates_email_format()
     {
+        session(['captcha_result' => 10]);
+
         $commentData = [
             'author_name' => 'John Doe',
             'author_email' => 'invalid-email',
-            'content' => 'This is a test comment with enough content to pass validation.'
+            'content' => 'This is a test comment with enough content to pass validation.',
+            'captcha_answer' => 10
         ];
 
         $response = $this->post(route('comments.store', $this->blogPost), $commentData);
@@ -107,10 +116,13 @@ class CommentControllerTest extends TestCase
     /** @test */
     public function it_validates_content_length()
     {
+        session(['captcha_result' => 10]);
+
         $commentData = [
             'author_name' => 'John Doe',
             'author_email' => 'john@example.com',
-            'content' => 'Short' // Too short
+            'content' => 'Short', // Too short
+            'captcha_answer' => 10
         ];
 
         $response = $this->post(route('comments.store', $this->blogPost), $commentData);
@@ -121,11 +133,14 @@ class CommentControllerTest extends TestCase
     /** @test */
     public function it_validates_website_url_format()
     {
+        session(['captcha_result' => 10]);
+
         $commentData = [
             'author_name' => 'John Doe',
             'author_email' => 'john@example.com',
             'author_website' => 'invalid-url',
-            'content' => 'This is a test comment with enough content to pass validation.'
+            'content' => 'This is a test comment with enough content to pass validation.',
+            'captcha_answer' => 10
         ];
 
         $response = $this->post(route('comments.store', $this->blogPost), $commentData);
@@ -141,10 +156,13 @@ class CommentControllerTest extends TestCase
             'status' => 'published'
         ]);
 
+        session(['captcha_result' => 10]);
+
         $commentData = [
             'author_name' => 'John Doe',
             'author_email' => 'john@example.com',
-            'content' => 'This is a test comment with enough content to pass validation.'
+            'content' => 'This is a test comment with enough content to pass validation.',
+            'captcha_answer' => 10
         ];
 
         $response = $this->post(route('comments.store', $blogPost), $commentData);
@@ -160,10 +178,13 @@ class CommentControllerTest extends TestCase
             'status' => 'draft'
         ]);
 
+        session(['captcha_result' => 10]);
+
         $commentData = [
             'author_name' => 'John Doe',
             'author_email' => 'john@example.com',
-            'content' => 'This is a test comment with enough content to pass validation.'
+            'content' => 'This is a test comment with enough content to pass validation.',
+            'captcha_answer' => 10
         ];
 
         $response = $this->post(route('comments.store', $blogPost), $commentData);
@@ -226,10 +247,13 @@ class CommentControllerTest extends TestCase
         // Clear any existing rate limits
         RateLimiter::clear('comment-submission:127.0.0.1');
 
+        session(['captcha_result' => 10]);
+
         $commentData = [
             'author_name' => 'John Doe',
             'author_email' => 'john@example.com',
-            'content' => 'This is a test comment with enough content to pass validation.'
+            'content' => 'This is a test comment with enough content to pass validation.',
+            'captcha_answer' => 10
         ];
 
         // First comment should succeed
@@ -242,6 +266,8 @@ class CommentControllerTest extends TestCase
             RateLimiter::hit('comment-submission:127.0.0.1', 300);
         }
 
+        session(['captcha_result' => 10]);
+
         // Next comment should be rate limited
         $response2 = $this->post(route('comments.store', $this->blogPost), $commentData);
         $response2->assertStatus(429); // Too Many Requests
@@ -250,11 +276,14 @@ class CommentControllerTest extends TestCase
     /** @test */
     public function it_validates_parent_comment_exists()
     {
+        session(['captcha_result' => 10]);
+
         $commentData = [
             'parent_id' => 99999, // Non-existent parent
             'author_name' => 'John Doe',
             'author_email' => 'john@example.com',
-            'content' => 'This is a test comment with enough content to pass validation.'
+            'content' => 'This is a test comment with enough content to pass validation.',
+            'captcha_answer' => 10
         ];
 
         $response = $this->post(route('comments.store', $this->blogPost), $commentData);
@@ -271,11 +300,14 @@ class CommentControllerTest extends TestCase
             'status' => 'approved'
         ]);
 
+        session(['captcha_result' => 10]);
+
         $commentData = [
             'parent_id' => $parentComment->id,
             'author_name' => 'John Doe',
             'author_email' => 'john@example.com',
-            'content' => 'This is a test comment with enough content to pass validation.'
+            'content' => 'This is a test comment with enough content to pass validation.',
+            'captcha_answer' => 10
         ];
 
         $response = $this->post(route('comments.store', $this->blogPost), $commentData);
