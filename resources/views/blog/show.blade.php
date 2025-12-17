@@ -57,6 +57,15 @@
 
                     <!-- Modern Comment Form -->
                     <div class="comment-form-container">
+                        @if(session('success'))
+                            <div class="blog-message blog-message-success">
+                                <i class="fas fa-check-circle"></i>
+                                {{ session('success') }}
+                                <button type="button" class="blog-message-close" onclick="this.parentElement.remove()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        @endif
                         <div class="comment-form-header">
                             <h5 class="comment-form-title">
                                 <i class="fas fa-plus"></i> 

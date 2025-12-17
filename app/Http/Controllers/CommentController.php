@@ -70,7 +70,7 @@ class CommentController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Seu comentário foi enviado e está aguardando aprovação.',
-                'reload_comments' => true // Or determine if a reload is needed
+                'reload_comments' => false // Don't reload for pending comments so message stays visible
             ]);
         }
 
