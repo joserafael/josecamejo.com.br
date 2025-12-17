@@ -19,7 +19,7 @@
                             <div class="col-md-6 mb-4">
                                 <article class="blog-post-card h-100">
                                     @if($post->featured_image)
-                                        <img src="{{ asset('storage/' . $post->featured_image) }}" class="blog-post-image" alt="{{ $post->title }}">
+                                        <img src="{{ asset($post->featured_image) }}" class="blog-post-image" alt="{{ $post->title }}">
                                     @endif
                                     
                                     <div class="blog-post-content">
