@@ -41,8 +41,8 @@
                     </div>
                 @endif
 
-                <div class="content">
-                    {!! $post->content !!}
+                <div class="content p-6">
+                    {!! nl2br(e($post->content)) !!}
                 </div>
             </article>
 
