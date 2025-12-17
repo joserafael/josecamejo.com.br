@@ -1,89 +1,124 @@
 #!/bin/bash
 
-# Script para preparar deploy Laravel para cPanel (FTP)
-# Autor: José Camejo
+# Script de Deploy Otimizado para cPanel
+# Autor: José Camejo (Revisado por Antigravity)
 # Data: $(date +%Y-%m-%d)
 
-echo "🚀 Iniciando build para deploy cPanel..."
+# Parar o script se houver erro
+set -e
 
-# Cores para output
+# Configurações
+DEPLOY_DIR="deploy-cpanel"
+TEMP_BUILD_DIR=".temp_build_$(date +%s)"
+TARGET_LARAVEL_PATH="/home2/josecamejocom/laravel_app" # Caminho no servidor (usado nas instruções)
+
+# Cores
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-# Função para log colorido
-log() {
-    echo -e "${GREEN}[$(date +'%H:%M:%S')]${NC} $1"
-}
+log() { echo -e "${GREEN}[$(date +'%H:%M:%S')]${NC} $1"; }
+error() { echo -e "${RED}[ERROR]${NC} $1"; }
+warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
 
-error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
+# 1. Verificações Iniciais
+log "🚀 Iniciando processo de build seguro..."
 
-warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-# Verificar se estamos no diretório correto
 if [ ! -f "artisan" ]; then
-    error "Este script deve ser executado na raiz do projeto Laravel!"
+    error "Execute este script na raiz do projeto Laravel."
     exit 1
 fi
 
-# Criar pasta de deploy
-DEPLOY_DIR="deploy-cpanel"
-log "Criando pasta de deploy: $DEPLOY_DIR"
-
+# Limpar builds anteriores
 if [ -d "$DEPLOY_DIR" ]; then
-    warning "Pasta $DEPLOY_DIR já existe. Removendo..."
+    warning "Removendo diretório de deploy anterior..."
     rm -rf "$DEPLOY_DIR"
 fi
+if [ -d "$TEMP_BUILD_DIR" ]; then
+    rm -rf "$TEMP_BUILD_DIR"
+fi
 
-mkdir -p "$DEPLOY_DIR"
+# 2. Preparar Ambiente de Build Temporário
+# Copiamos TUDO para uma pasta temporária para não quebrar o ambiente de desenvolvimento local
+log "📂 Criando ambiente de build isolado (copiando arquivos)..."
+mkdir -p "$TEMP_BUILD_DIR"
+
+# Rsync para copiar arquivos, excluindo o que não é necessário para o build
+# Note que copiamos node_modules E vendor locais para agilizar, mas vamos limpar depois
+rsync -a \
+    --exclude='.git' \
+    --exclude='.idea' \
+    --exclude='.vscode' \
+    --exclude="$DEPLOY_DIR" \
+    --exclude="storage/logs/*" \
+    --exclude="storage/framework/cache/*" \
+    --exclude="storage/framework/sessions/*" \
+    --exclude="storage/framework/views/*" \
+    . "$TEMP_BUILD_DIR"
+
+cd "$TEMP_BUILD_DIR"
+
+# 3. Build do Frontend (Vite/NPM)
+log "📦 Compilando assets (Frontend)..."
+if [ -f "package.json" ]; then
+    # Se não tiver node_modules copiado (ex: foi excluido), instala. 
+    # Se já tiver, o comando é rápido.
+    if [ ! -d "node_modules" ]; then
+        npm ci --silent
+    else
+        # Apenas garante que está tudo certo
+        npm install --silent
+    fi
+    
+    npm run build
+    
+    # Remover node_modules do build final (não vai para o servidor PHP)
+    rm -rf node_modules
+else
+    warning "package.json não encontrado. Pulei o build do frontend."
+fi
+
+# 4. Build do Backend (Composer)
+log "🐘 Otimizando dependências PHP (Composer)..."
+# Remove dev dependencies e otimiza autoloader
+composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
+
+# Limpar caches no build temporário (para não levar lixo local)
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+
+# Remover arquivos desnecessários para produção
+rm -rf tests
+rm -rf .env.example
+rm -rf .gitattributes
+rm -rf .gitignore
+rm -rf README.md
+rm -rf phpunit.xml
+
+cd ..
+
+# 5. Organizar Estrutura Final
+log "🏗️  Montando estrutura para cPanel..."
 mkdir -p "$DEPLOY_DIR/public_html"
 mkdir -p "$DEPLOY_DIR/laravel_app"
 
-# Instalar dependências de produção
-log "Instalando dependências de produção..."
-composer install --no-dev --optimize-autoloader --no-interaction
+# Mover conteúdo da pasta public do build para public_html final
+mv "$TEMP_BUILD_DIR/public/"* "$DEPLOY_DIR/public_html/"
+# Remover a pasta public vazia do build
+rm -rf "$TEMP_BUILD_DIR/public"
 
-# Compilar assets do Vite
-log "Compilando assets do Vite para produção..."
-if [ -f "package.json" ]; then
-    if command -v npm &> /dev/null; then
-        npm install
-        npm run build
-        log "✅ Assets do Vite compilados com sucesso!"
-    else
-        warning "NPM não encontrado. Pulando compilação do Vite."
-        warning "Certifique-se de compilar os assets manualmente: npm run build"
-    fi
-else
-    warning "package.json não encontrado. Pulando compilação do Vite."
-fi
+# Mover o restante do app para laravel_app
+mv "$TEMP_BUILD_DIR/"* "$DEPLOY_DIR/laravel_app/"
+mv "$TEMP_BUILD_DIR/.[!.]"* "$DEPLOY_DIR/laravel_app/" 2>/dev/null || true # Copiar ocultos (.env se houver, etc)
 
-# Copiar arquivos da aplicação (exceto public)
-log "Copiando arquivos da aplicação..."
-rsync -av --exclude='public' \
-          --exclude='node_modules' \
-          --exclude='.git' \
-          --exclude='tests' \
-          --exclude='storage/logs/*' \
-          --exclude='storage/framework/cache/*' \
-          --exclude='storage/framework/sessions/*' \
-          --exclude='storage/framework/views/*' \
-          --exclude='deploy-cpanel' \
-          --exclude='.env' \
-          . "$DEPLOY_DIR/laravel_app/"
+# Remover pasta temporária
+rm -rf "$TEMP_BUILD_DIR"
 
-# Copiar pasta public para public_html
-log "Copiando pasta public para public_html..."
-cp -r public/* "$DEPLOY_DIR/public_html/"
-
-# Criar index.php modificado para cPanel
-log "Criando index.php para cPanel..."
+# 6. Configurar index.php
+log "📝 Ajustando index.php..."
 cat > "$DEPLOY_DIR/public_html/index.php" << 'EOF'
 <?php
 
@@ -92,45 +127,15 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-/*
-|--------------------------------------------------------------------------
-| Check If The Application Is Under Maintenance
-|--------------------------------------------------------------------------
-|
-| If the application is in maintenance / demo mode via the "down" command
-| we will load this file so that any pre-rendered content can be shown
-| instead of starting the framework, which could cause an exception.
-|
-*/
-
+// Ajuste de caminho para manutençao
 if (file_exists($maintenance = __DIR__.'/../laravel_app/storage/framework/maintenance.php')) {
     require $maintenance;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Register The Auto Loader
-|--------------------------------------------------------------------------
-|
-| Composer provides a convenient, automatically generated class loader for
-| this application. We just need to utilize it! We'll simply require it
-| into the script here so we don't need to manually load our classes.
-|
-*/
-
+// Carregar Autoloader
 require __DIR__.'/../laravel_app/vendor/autoload.php';
 
-/*
-|--------------------------------------------------------------------------
-| Run The Application
-|--------------------------------------------------------------------------
-|
-| Once we have the application, we can handle the incoming request using
-| the application's HTTP kernel. Then, we will send the response back
-| to this client's browser, allowing them to enjoy our application.
-|
-*/
-
+// Inicializar App
 $app = require_once __DIR__.'/../laravel_app/bootstrap/app.php';
 
 $kernel = $app->make(Kernel::class);
@@ -142,158 +147,93 @@ $response = $kernel->handle(
 $kernel->terminate($request, $response);
 EOF
 
-# Copiar arquivo .env.production como .env
-log "Copiando configuração de produção..."
-cp .env.production "$DEPLOY_DIR/laravel_app/.env"
-
-# Criar pastas de storage necessárias
-log "Criando estrutura completa de storage..."
-mkdir -p "$DEPLOY_DIR/laravel_app/storage/app/public"
-mkdir -p "$DEPLOY_DIR/laravel_app/storage/framework/cache/data"
-mkdir -p "$DEPLOY_DIR/laravel_app/storage/framework/sessions"
-mkdir -p "$DEPLOY_DIR/laravel_app/storage/framework/testing"
-mkdir -p "$DEPLOY_DIR/laravel_app/storage/framework/views"
-mkdir -p "$DEPLOY_DIR/laravel_app/storage/logs"
-
-# Criar arquivos .gitkeep para manter as pastas
-touch "$DEPLOY_DIR/laravel_app/storage/app/public/.gitkeep"
-touch "$DEPLOY_DIR/laravel_app/storage/framework/cache/data/.gitkeep"
-touch "$DEPLOY_DIR/laravel_app/storage/framework/sessions/.gitkeep"
-touch "$DEPLOY_DIR/laravel_app/storage/framework/testing/.gitkeep"
-touch "$DEPLOY_DIR/laravel_app/storage/framework/views/.gitkeep"
-touch "$DEPLOY_DIR/laravel_app/storage/logs/.gitkeep"
-
-# Limpar caches com paths locais e gerar novos para produção
-log "Limpando caches com paths locais..."
-cd "$DEPLOY_DIR/laravel_app"
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
-php artisan cache:clear
-
-# Gerar novos caches para produção (opcional - pode ser feito no servidor)
-log "Gerando caches para produção..."
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-
-cd - > /dev/null
-
-# Corrigir caminhos hardcoded nos arquivos de cache
-log "Corrigindo caminhos nos arquivos de cache..."
-CONFIG_CACHE_FILE="$DEPLOY_DIR/laravel_app/bootstrap/cache/config.php"
-if [ -f "$CONFIG_CACHE_FILE" ]; then
-    # Substituir caminhos locais por caminhos de produção
-    CURRENT_PATH=$(pwd)
-    DEPLOY_PATH="$CURRENT_PATH/deploy-cpanel/laravel_app"
-    
-    # Usar sed para substituir os caminhos
-    sed -i.bak "s|$DEPLOY_PATH|/home2/josecamejocom/laravel_app|g" "$CONFIG_CACHE_FILE"
-    
-    # Remover arquivo de backup
-    rm -f "$CONFIG_CACHE_FILE.bak"
-    
-    log "✅ Caminhos corrigidos no cache de configuração"
-else
-    log "⚠️  Arquivo de cache de configuração não encontrado"
+# 7. Configuração .env
+log "⚙️  Preparando .env..."
+if [ -f ".env.production" ]; then
+    cp .env.production "$DEPLOY_DIR/laravel_app/.env"
+    log "✅ .env.production copiado como .env"
+elif [ -f ".env" ]; then
+    cp .env "$DEPLOY_DIR/laravel_app/.env.example_copy"
+    warning "⚠️  Nenhum .env.production encontrado. Copiei seu .env local como .env.example_copy por segurança."
 fi
 
-# Definir permissões
-log "Definindo permissões..."
-chmod -R 755 "$DEPLOY_DIR/laravel_app/storage"
-chmod -R 755 "$DEPLOY_DIR/laravel_app/bootstrap/cache"
+# 8. Criar estrutura de storage limpa e arquivos .gitkeep
+log "🗄️  Recriando estrutura de storage..."
+STORAGE_DIRS=(
+    "storage/app/public"
+    "storage/framework/cache/data"
+    "storage/framework/sessions"
+    "storage/framework/testing"
+    "storage/framework/views"
+    "storage/logs"
+)
 
-# Criar arquivo de instruções
-log "Criando arquivo de instruções..."
-cat > "$DEPLOY_DIR/INSTRUCOES_DEPLOY.md" << 'EOF'
-# 📋 INSTRUÇÕES DE DEPLOY - cPanel
+for dir in "${STORAGE_DIRS[@]}"; do
+    mkdir -p "$DEPLOY_DIR/laravel_app/$dir"
+    touch "$DEPLOY_DIR/laravel_app/$dir/.gitkeep"
+    chmod -R 755 "$DEPLOY_DIR/laravel_app/$(dirname "$dir")"
+done
 
-## 🎯 Estrutura de Upload
+# Permissões mais abertas para pastas de escrita (o servidor vai ajustar user/group, mas o modo ajuda)
+chmod -R 775 "$DEPLOY_DIR/laravel_app/storage"
+chmod -R 775 "$DEPLOY_DIR/laravel_app/bootstrap/cache"
 
-### 1. Via FTP, faça upload dos arquivos:
+# 9. Instruções de Deploy
+log "📄 Gerando manual de instruções..."
+cat > "$DEPLOY_DIR/LEIA_ME.md" << EOF
+# � Guia de Deploy - cPanel
 
-```
-📁 Seu cPanel
-├── 📁 public_html/ (pasta pública do seu domínio)
-│   └── [Conteúdo da pasta public_html/]
-│
-└── 📁 laravel_app/ (criar esta pasta FORA da public_html)
-    └── [Conteúdo da pasta laravel_app/]
-```
+Este pacote já está pronto para upload.
 
-### 2. Configurações Importantes:
+## 1. Estrutura de Pastas
+O zip contém duas pastas principais:
+- \`public_html/\`: Contém os arquivos públicos (index.php, css, js, images).
+- \`laravel_app/\`: Contém o código fonte (backend, vendor, etc).
 
-#### ⚙️ Arquivo .env (laravel_app/.env)
-- ✅ Altere APP_URL para seu domínio
-- ✅ Configure dados do banco MySQL do cPanel
-- ✅ Gere nova APP_KEY: `php artisan key:generate`
+## 2. Instalação
+1. Acesse o **Gerenciador de Arquivos** do cPanel.
+2. Faça upload do conteúdo de \`public_html\` para a pasta \`public_html\` do seu domínio.
+3. Crie uma pasta chamada \`laravel_app\` na RAIZ da sua conta (FORA da public_html).
+   - Caminho esperado: \`/home/usuario/laravel_app\` ou \`$TARGET_LARAVEL_PATH\`
+4. Faça upload do conteúdo de \`laravel_app\` para essa nova pasta.
 
-#### 🗄️ Banco de Dados
-1. Crie banco MySQL no cPanel
-2. Importe estrutura (se houver migrations)
-3. Configure credenciais no .env
+## 3. Banco de Dados e Configuração
+1. Edite o arquivo \`.env\` dentro da pasta \`laravel_app\` no servidor.
+   - Ajuste \`DB_DATABASE\`, \`DB_USERNAME\`, \`DB_PASSWORD\`.
+   - Ajuste \`APP_URL\` para seu domínio (ex: https://josecamejo.com.br).
+   - Se necessário, gere uma nova key via SSH: \`php artisan key:generate\`.
 
-#### 📁 Permissões (via File Manager do cPanel)
-- storage/ → 755
-- bootstrap/cache/ → 755
+## 4. Otimização (Via Terminal/SSH)
+Recomendamos rodar estes comandos no servidor após o upload para garantir performance:
 
-#### 🔄 Cache (IMPORTANTE - Execute via Terminal/SSH no cPanel)
-```bash
-# Limpar caches antigos (se necessário)
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
-
-# Gerar novos caches para produção
+\`\`\`bash
+cd $TARGET_LARAVEL_PATH
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
-```
+php artisan storage:link
+\`\`\`
 
-### 3. Teste Final:
-- Acesse seu domínio
-- Verifique se não há erros
-- Teste todas as funcionalidades
-
-## 🚨 Problemas Comuns:
-
-### "500 Internal Server Error"
-- Verifique permissões das pastas
-- Confira logs de erro no cPanel
-- Valide configurações do .env
-
-### "APP_KEY não definida"
-```bash
-# Execute localmente e copie a chave:
-php artisan key:generate --show
-```
-
-### Arquivos não encontrados
-- Confirme estrutura de pastas
-- Verifique se index.php está na public_html
-- Confirme caminho para laravel_app
-
-## 📞 Suporte:
-Em caso de dúvidas, verifique os logs de erro do cPanel.
+## 🚨 Solução de Problemas
+- **Erro 500**: Verifique permissões das pastas \`storage\` e \`bootstrap/cache\` (devem ser 775 ou 755).
+- **Tela Branca**: Verifique os logs em \`laravel_app/storage/logs/laravel.log\`.
 EOF
 
-# Limpar cache local
-log "Limpando cache local..."
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
+# 10. Zipar para facilitar upload
+log "🤐 Compactando pacote de deploy..."
+if command -v zip &> /dev/null; then
+    cd "$DEPLOY_DIR"
+    zip -r "deploy_$(date +%Y%m%d).zip" . -x "*.DS_Store"
+    log "✅ Arquivo 'deploy_$(date +%Y%m%d).zip' criado com sucesso!"
+    cd ..
+else
+    warning "Comando 'zip' não encontrado. Os arquivos estão na pasta $DEPLOY_DIR."
+fi
 
-# Reinstalar dependências de desenvolvimento
-log "Reinstalando dependências de desenvolvimento..."
-composer install
-
-log "✅ Build concluído com sucesso!"
+log "✅ PROCESSO CONCLUÍDO!"
 echo ""
-echo -e "${BLUE}📁 Pasta de deploy criada:${NC} $DEPLOY_DIR"
-echo -e "${BLUE}📋 Instruções:${NC} $DEPLOY_DIR/INSTRUCOES_DEPLOY.md"
+echo -e "${BLUE}📁  Arquivos prontos em:${NC} $(pwd)/$DEPLOY_DIR"
+if [ -f "$DEPLOY_DIR/deploy_$(date +%Y%m%d).zip" ]; then
+    echo -e "${BLUE}�  Pacote zip:${NC} $(pwd)/$DEPLOY_DIR/deploy_$(date +%Y%m%d).zip"
+fi
 echo ""
-echo -e "${GREEN}🚀 Próximos passos:${NC}"
-echo "1. Faça upload da pasta 'public_html' para a public_html do seu cPanel"
-echo "2. Faça upload da pasta 'laravel_app' para fora da public_html"
-echo "3. Configure o arquivo .env com dados do seu hosting"
-echo "4. Teste o site!"
