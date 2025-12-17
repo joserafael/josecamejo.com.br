@@ -1,0 +1,15 @@
+.editor-wrapper {
+    background: white;
+    border-radius: 0.5rem;
+}
+
+.editor-toolbar {
+    border-color: #e2e8f0;
+    border-radius: 0.5rem 0.5rem 0 0;
+    opacity: 1;
+}
+
+.CodeMirror {
+    border-color: #e2e8f0;
+    border-radius: 0 0 0.5rem 0.5rem;
+}

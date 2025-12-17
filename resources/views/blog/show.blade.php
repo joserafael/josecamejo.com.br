@@ -42,7 +42,7 @@
                 @endif
 
                 <div class="content p-6">
-                    {!! nl2br(e($post->content)) !!}
+                    {!! Str::markdown($post->content) !!}
                 </div>
             </article>
 
@@ -275,3 +275,7 @@
 
 
 @endsection
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/markdown.css') }}">
+@endpush

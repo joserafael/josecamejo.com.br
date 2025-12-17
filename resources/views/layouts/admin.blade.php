@@ -22,6 +22,8 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    @stack('styles')
 </head>
 <body class="bg-gray-100 font-sans antialiased">
     <div class="min-h-screen flex">

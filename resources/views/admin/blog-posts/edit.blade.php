@@ -75,7 +75,8 @@
                                 <label for="content" class="form-label required">Conteúdo</label>
                                 <textarea id="content" name="content" rows="15" 
                                           class="form-textarea @error('content') error @enderror" 
-                                          placeholder="Escreva o conteúdo do post..." required>{{ old('content', $blogPost->content) }}</textarea>
+                                          placeholder="Escreva o conteúdo do post..." 
+                                          data-autosave-id="blog_post_edit_{{ $blogPost->id }}" required>{{ old('content', $blogPost->content) }}</textarea>
                                 @error('content')
                                     <span class="error-message">{{ $message }}</span>
                                 @enderror
@@ -544,4 +545,14 @@ document.addEventListener('DOMContentLoaded', function() {
     togglePublishedAt(); // Initial check
 });
 </script>
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/easymde.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/easymde-custom.css') }}">
+@endpush
+
+@push('scripts')
+<script src="{{ asset('js/easymde.min.js') }}"></script>
+<script src="{{ asset('js/blog-post-editor.js') }}"></script>
+@endpush
 @endsection

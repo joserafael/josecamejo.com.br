@@ -76,7 +76,7 @@
                 <div class="post-content">
                     <h3>Conteúdo</h3>
                     <div class="content-body">
-                        {!! nl2br(e($blogPost->content)) !!}
+                        {!! Str::markdown($blogPost->content) !!}
                     </div>
                 </div>
 
@@ -423,9 +423,103 @@
 }
 
 .content-body {
-    line-height: 1.7;
+    line-height: 1.8;
     color: #4a5568;
     font-size: 1rem;
+}
+
+.content-body h1,
+.content-body h2,
+.content-body h3,
+.content-body h4,
+.content-body h5,
+.content-body h6 {
+    color: #2d3748;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.content-body h1 { font-size: 2rem; }
+.content-body h2 { font-size: 1.75rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
+.content-body h3 { font-size: 1.5rem; }
+.content-body h4 { font-size: 1.25rem; }
+
+.content-body p {
+    margin-bottom: 1.25rem;
+}
+
+.content-body ul,
+.content-body ol {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+}
+
+.content-body ul { list-style-type: disc; }
+.content-body ol { list-style-type: decimal; }
+
+.content-body li {
+    margin-bottom: 0.5rem;
+}
+
+.content-body blockquote {
+    border-left: 4px solid #3182ce;
+    background-color: #f7fafc;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #4a5568;
+    border-radius: 0 8px 8px 0;
+}
+
+.content-body code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.875em;
+    color: #d53f8c;
+    background-color: #fef2f2; /* Light red/pink bg */
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+}
+
+.content-body pre {
+    background-color: #2d3748;
+    color: #f7fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+}
+
+.content-body pre code {
+    color: inherit;
+    background-color: transparent;
+    padding: 0;
+}
+
+.content-body a {
+    color: #3182ce;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.content-body a:hover {
+    color: #2c5aa0;
+}
+
+.content-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: block;
+}
+
+.content-body hr {
+    border: 0;
+    border-top: 1px solid #e2e8f0;
+    margin: 2rem 0;
 }
 
 .seo-section {
