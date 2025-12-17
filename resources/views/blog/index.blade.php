@@ -7,7 +7,7 @@
     <div class="blog-grid">
         <div class="blog-content">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1>{{ __('blog.title') }}</h1>
+           
                 
                 @if(request('category') || request('tag') || request('search'))
                     <div>
