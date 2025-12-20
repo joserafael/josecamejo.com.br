@@ -82,7 +82,7 @@ class LocalizationHelper
             $switcher[] = [
                 'code' => $locale,
                 'name' => $name,
-                'url' => self::getLocalizedUrl($locale),
+                'url' => self::getLocalizedUrl($locale, null, Route::current() ? Route::current()->parameters() : []),
                 'active' => $locale === $currentLocale
             ];
         }

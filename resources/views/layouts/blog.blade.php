@@ -50,6 +50,7 @@
                     <div class="blog-nav-links">
                         <a href="{{ route('blog.index', ['locale' => app()->getLocale()]) }}">{{ __('blog.all_posts') }}</a>
                         <a href="{{ route('home') }}">{{ __('blog.back_to_site') }}</a>
+                        @include('layouts.partials.language-switcher')
                     </div>
                 </nav>
             </div>
