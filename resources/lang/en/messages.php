@@ -5,6 +5,7 @@ return [
     'home' => 'Home',
     'about' => 'About',
     'contact' => 'Contact',
+    'blog' => 'Blog',
     'admin' => 'Admin',
     'login' => 'Login',
     'logout' => 'Logout',

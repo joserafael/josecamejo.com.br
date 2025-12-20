@@ -14,6 +14,7 @@
             <li><a href="#about">{{ __('messages.about') }}</a></li>
             <li><a href="#skills">{{ __('messages.skills') }}</a></li>
             <li><a href="#contact">{{ __('messages.contact') }}</a></li>
+            <li><a href="/blog">{{ __('messages.blog') }}</a></li>
         </ul>
         
         <!-- Language Switcher -->

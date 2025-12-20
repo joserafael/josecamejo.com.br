@@ -5,6 +5,7 @@ return [
     'home' => 'Início',
     'about' => 'Sobre',
     'contact' => 'Contato',
+    'blog' => 'Blog',
     'admin' => 'Admin',
     'login' => 'Entrar',
     'logout' => 'Sair',
