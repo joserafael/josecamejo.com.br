@@ -15,6 +15,7 @@
     <title>@yield('title', __('blog.title') . ' - José Rafael Camejo')</title>
     <meta name="description" content="@yield('description', __('blog.description'))">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @stack('meta')
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

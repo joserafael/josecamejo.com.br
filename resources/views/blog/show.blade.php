@@ -2,6 +2,23 @@
 
 @section('title', $post->title . ' - Blog')
 
+@push('meta')
+    <meta property="og:title" content="{{ $post->title }}" />
+    <meta property="og:description" content="{{ Str::limit(strip_tags(Str::markdown($post->content)), 160) }}" />
+    <meta property="og:url" content="{{ request()->url() }}" />
+    <meta property="og:type" content="article" />
+    @if($post->featured_image)
+        <meta property="og:image" content="{{ asset($post->featured_image) }}" />
+        <meta property="og:image:alt" content="{{ $post->title }}" />
+        <meta name="twitter:image" content="{{ asset($post->featured_image) }}" />
+        <meta name="twitter:card" content="summary_large_image" />
+    @else
+        <meta name="twitter:card" content="summary" />
+    @endif
+    <meta name="twitter:title" content="{{ $post->title }}" />
+    <meta name="twitter:description" content="{{ Str::limit(strip_tags(Str::markdown($post->content)), 160) }}" />
+@endpush
+
 @section('content')
 <div class="blog-container">
     <div class="blog-grid">
