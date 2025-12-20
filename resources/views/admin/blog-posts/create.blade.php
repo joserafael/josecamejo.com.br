@@ -63,7 +63,7 @@
                                 <textarea id="content" name="content" rows="15" 
                                           class="form-textarea @error('content') error @enderror" 
                                           placeholder="Escreva o conteúdo do post..." 
-                                          data-autosave-id="blog_post_create" required>{{ old('content') }}</textarea>
+                                          data-autosave-id="blog_post_create">{{ old('content') }}</textarea>
                                 @error('content')
                                     <span class="error-message">{{ $message }}</span>
                                 @enderror
