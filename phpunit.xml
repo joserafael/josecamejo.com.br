@@ -10,9 +10,7 @@
          failOnRisky="true"
          failOnEmptyTestSuite="true"
          beStrictAboutOutputDuringTests="true"
-         timeoutForSmallTests="1"
-         timeoutForMediumTests="10"
-         timeoutForLargeTests="60"
+         cacheDirectory=".phpunit.cache"
 >
     <testsuites>
         <testsuite name="Unit">
@@ -45,41 +43,47 @@
         </report>
     </coverage>
     
-    <logging>
-        <junit outputFile="build/report.junit.xml"/>
-    </logging>
-    
     <php>
-        <env name="APP_ENV" value="testing"/>
-        <env name="APP_KEY" value="base64:2fl+Ktvkdphvz9JfhiJdD3F6XgOQmAFWwEC4qyaqr30="/>
+        <!-- Test Environment - Isolated from Development -->
+        <env name="APP_ENV" value="testing" force="true"/>
+        <env name="APP_KEY" value="base64:2fl+Ktvkdphvz9JfhiJdD3F6XgOQmAFWwEC4qyaqr30=" force="true"/>
+        <env name="APP_DEBUG" value="true"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
-        <env name="BCRYPT_ROUNDS" value="4"/>
+        
+        <!-- MySQL Test Database - Separate from Development -->
+        <env name="DB_CONNECTION" value="mysql" force="true"/>
+        <env name="DB_HOST" value="127.0.0.1" force="true"/>
+        <env name="DB_PORT" value="3306" force="true"/>
+        <env name="DB_DATABASE" value="josecamejo_test" force="true"/>
+        <env name="DB_USERNAME" value="root" force="true"/>
+        <env name="DB_PASSWORD" value="" force="true"/>
+        
+        <!-- Use array drivers for caching, sessions - Isolated -->
         <env name="CACHE_STORE" value="array"/>
-        <env name="DB_CONNECTION" value="mysql"/>
-        <env name="DB_HOST" value="127.0.0.1"/>
-        <env name="DB_PORT" value="3306"/>
-        <env name="DB_DATABASE" value="josecamejo_test"/>
-        <env name="DB_USERNAME" value="root"/>
-        <env name="DB_PASSWORD" value=""/>
-        <env name="MAIL_MAILER" value="array"/>
-        <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
+        
+        <!-- Fast hashing for tests -->
+        <env name="BCRYPT_ROUNDS" value="4"/>
+        
+        <!-- Logging -->
+        <env name="LOG_CHANNEL" value="single"/>
+        <env name="LOG_LEVEL" value="critical"/>
+        <env name="BROADCAST_DRIVER" value="log"/>
+        
+        <!-- Mail -->
+        <env name="MAIL_MAILER" value="array"/>
+        
+        <!-- Filesystems -->
+        <env name="FILESYSTEM_DISK" value="local"/>
+        
+        <!-- Disable heavy services -->
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
         
-        <!-- Configurações adicionais para testes -->
-        <env name="LOG_CHANNEL" value="single"/>
-        <env name="LOG_LEVEL" value="critical"/>
-        <env name="BROADCAST_DRIVER" value="log"/>
-        <env name="FILESYSTEM_DISK" value="local"/>
-        
-        <!-- Configurações de performance -->
+        <!-- Performance settings -->
         <ini name="memory_limit" value="512M"/>
         <ini name="max_execution_time" value="0"/>
-        
-        <!-- Configurações para debugging -->
-        <server name="APP_ENV" value="testing"/>
-        <server name="BCRYPT_ROUNDS" value="4"/>
     </php>
 </phpunit>
