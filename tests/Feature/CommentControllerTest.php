@@ -4,10 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\BlogComment;
 use App\Models\BlogPost;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\RateLimiter;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CommentControllerTest extends TestCase
@@ -19,16 +19,16 @@ class CommentControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Create a blog post that allows comments
         $this->blogPost = BlogPost::factory()->create([
             'allow_comments' => true,
-            'status' => 'published'
+            'status' => 'published',
         ]);
     }
 
-    /** @test */
-    public function it_can_store_a_valid_comment()
+    #[Test]
+    public function it_can_store_a_valid_comment(): void
     {
         session(['captcha_result' => 10]);
 
@@ -37,7 +37,7 @@ class CommentControllerTest extends TestCase
             'author_email' => 'john@example.com',
             'author_website' => 'https://johndoe.com',
             'content' => 'This is a test comment with enough content to pass validation.',
-            'captcha_answer' => 10
+            'captcha_answer' => 10,
         ];
 
         $response = $this->post(route('comments.store', $this->blogPost), $commentData);
@@ -51,17 +51,17 @@ class CommentControllerTest extends TestCase
             'author_email' => 'john@example.com',
             'author_website' => 'https://johndoe.com',
             'content' => 'This is a test comment with enough content to pass validation.',
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
     }
 
-    /** @test */
-    public function it_can_store_a_reply_comment()
+    #[Test]
+    public function it_can_store_a_reply_comment(): void
     {
         // Create a parent comment
         $parentComment = BlogComment::factory()->create([
             'blog_post_id' => $this->blogPost->id,
-            'status' => 'approved'
+            'status' => 'approved',
         ]);
 
         session(['captcha_result' => 10]);
@@ -71,7 +71,7 @@ class CommentControllerTest extends TestCase
             'author_name' => 'Jane Doe',
             'author_email' => 'jane@example.com',
             'content' => 'This is a reply to the parent comment with sufficient content.',
-            'captcha_answer' => 10
+            'captcha_answer' => 10,
         ];
 
         $response = $this->post(route('comments.store', $this->blogPost), $replyData);
@@ -84,20 +84,20 @@ class CommentControllerTest extends TestCase
             'parent_id' => $parentComment->id,
             'author_name' => 'Jane Doe',
             'author_email' => 'jane@example.com',
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
     }
 
-    /** @test */
-    public function it_validates_required_fields()
+    #[Test]
+    public function it_validates_required_fields(): void
     {
         $response = $this->post(route('comments.store', $this->blogPost), []);
 
         $response->assertSessionHasErrors(['author_name', 'author_email', 'content', 'captcha_answer']);
     }
 
-    /** @test */
-    public function it_validates_email_format()
+    #[Test]
+    public function it_validates_email_format(): void
     {
         session(['captcha_result' => 10]);
 
@@ -105,7 +105,7 @@ class CommentControllerTest extends TestCase
             'author_name' => 'John Doe',
             'author_email' => 'invalid-email',
             'content' => 'This is a test comment with enough content to pass validation.',
-            'captcha_answer' => 10
+            'captcha_answer' => 10,
         ];
 
         $response = $this->post(route('comments.store', $this->blogPost), $commentData);
@@ -113,8 +113,8 @@ class CommentControllerTest extends TestCase
         $response->assertSessionHasErrors(['author_email']);
     }
 
-    /** @test */
-    public function it_validates_content_length()
+    #[Test]
+    public function it_validates_content_length(): void
     {
         session(['captcha_result' => 10]);
 
@@ -122,7 +122,7 @@ class CommentControllerTest extends TestCase
             'author_name' => 'John Doe',
             'author_email' => 'john@example.com',
             'content' => 'Short', // Too short
-            'captcha_answer' => 10
+            'captcha_answer' => 10,
         ];
 
         $response = $this->post(route('comments.store', $this->blogPost), $commentData);
@@ -130,8 +130,8 @@ class CommentControllerTest extends TestCase
         $response->assertSessionHasErrors(['content']);
     }
 
-    /** @test */
-    public function it_validates_website_url_format()
+    #[Test]
+    public function it_validates_website_url_format(): void
     {
         session(['captcha_result' => 10]);
 
@@ -140,7 +140,7 @@ class CommentControllerTest extends TestCase
             'author_email' => 'john@example.com',
             'author_website' => 'invalid-url',
             'content' => 'This is a test comment with enough content to pass validation.',
-            'captcha_answer' => 10
+            'captcha_answer' => 10,
         ];
 
         $response = $this->post(route('comments.store', $this->blogPost), $commentData);
@@ -148,12 +148,12 @@ class CommentControllerTest extends TestCase
         $response->assertSessionHasErrors(['author_website']);
     }
 
-    /** @test */
-    public function it_prevents_comments_on_posts_that_dont_allow_them()
+    #[Test]
+    public function it_prevents_comments_on_posts_that_dont_allow_them(): void
     {
         $blogPost = BlogPost::factory()->create([
             'allow_comments' => false,
-            'status' => 'published'
+            'status' => 'published',
         ]);
 
         session(['captcha_result' => 10]);
@@ -162,7 +162,7 @@ class CommentControllerTest extends TestCase
             'author_name' => 'John Doe',
             'author_email' => 'john@example.com',
             'content' => 'This is a test comment with enough content to pass validation.',
-            'captcha_answer' => 10
+            'captcha_answer' => 10,
         ];
 
         $response = $this->post(route('comments.store', $blogPost), $commentData);
@@ -170,12 +170,12 @@ class CommentControllerTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
-    public function it_prevents_comments_on_unpublished_posts()
+    #[Test]
+    public function it_prevents_comments_on_unpublished_posts(): void
     {
         $blogPost = BlogPost::factory()->create([
             'allow_comments' => true,
-            'status' => 'draft'
+            'status' => 'draft',
         ]);
 
         session(['captcha_result' => 10]);
@@ -184,7 +184,7 @@ class CommentControllerTest extends TestCase
             'author_name' => 'John Doe',
             'author_email' => 'john@example.com',
             'content' => 'This is a test comment with enough content to pass validation.',
-            'captcha_answer' => 10
+            'captcha_answer' => 10,
         ];
 
         $response = $this->post(route('comments.store', $blogPost), $commentData);
@@ -192,26 +192,26 @@ class CommentControllerTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
-    public function it_can_get_comments_for_a_post()
+    #[Test]
+    public function it_can_get_comments_for_a_post(): void
     {
         // Create some approved comments
         $comment1 = BlogComment::factory()->create([
             'blog_post_id' => $this->blogPost->id,
             'status' => 'approved',
-            'parent_id' => null
+            'parent_id' => null,
         ]);
 
         $comment2 = BlogComment::factory()->create([
             'blog_post_id' => $this->blogPost->id,
             'status' => 'approved',
-            'parent_id' => $comment1->id
+            'parent_id' => $comment1->id,
         ]);
 
         // Create a pending comment (should not be included)
         BlogComment::factory()->create([
             'blog_post_id' => $this->blogPost->id,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $response = $this->get(route('comments.get', $this->blogPost));
@@ -219,7 +219,7 @@ class CommentControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonStructure([
             'comments',
-            'total'
+            'total',
         ]);
 
         $data = $response->json();
@@ -227,12 +227,12 @@ class CommentControllerTest extends TestCase
         $this->assertEquals(1, $data['total']);
     }
 
-    /** @test */
-    public function it_prevents_getting_comments_for_posts_that_dont_allow_them()
+    #[Test]
+    public function it_prevents_getting_comments_for_posts_that_dont_allow_them(): void
     {
         $blogPost = BlogPost::factory()->create([
             'allow_comments' => false,
-            'status' => 'published'
+            'status' => 'published',
         ]);
 
         $response = $this->get(route('comments.get', $blogPost));
@@ -241,8 +241,8 @@ class CommentControllerTest extends TestCase
         $response->assertJson(['error' => 'Comments are not allowed for this post.']);
     }
 
-    /** @test */
-    public function it_applies_rate_limiting()
+    #[Test]
+    public function it_applies_rate_limiting(): void
     {
         // Clear any existing rate limits
         RateLimiter::clear('comment-submission:127.0.0.1');
@@ -253,7 +253,7 @@ class CommentControllerTest extends TestCase
             'author_name' => 'John Doe',
             'author_email' => 'john@example.com',
             'content' => 'This is a test comment with enough content to pass validation.',
-            'captcha_answer' => 10
+            'captcha_answer' => 10,
         ];
 
         // First comment should succeed
@@ -273,8 +273,8 @@ class CommentControllerTest extends TestCase
         $response2->assertStatus(429); // Too Many Requests
     }
 
-    /** @test */
-    public function it_validates_parent_comment_exists()
+    #[Test]
+    public function it_validates_parent_comment_exists(): void
     {
         session(['captcha_result' => 10]);
 
@@ -283,7 +283,7 @@ class CommentControllerTest extends TestCase
             'author_name' => 'John Doe',
             'author_email' => 'john@example.com',
             'content' => 'This is a test comment with enough content to pass validation.',
-            'captcha_answer' => 10
+            'captcha_answer' => 10,
         ];
 
         $response = $this->post(route('comments.store', $this->blogPost), $commentData);
@@ -291,13 +291,13 @@ class CommentControllerTest extends TestCase
         $response->assertSessionHasErrors(['parent_id']);
     }
 
-    /** @test */
-    public function it_validates_parent_comment_belongs_to_same_post()
+    #[Test]
+    public function it_validates_parent_comment_belongs_to_same_post(): void
     {
         $otherPost = BlogPost::factory()->create(['allow_comments' => true]);
         $parentComment = BlogComment::factory()->create([
             'blog_post_id' => $otherPost->id,
-            'status' => 'approved'
+            'status' => 'approved',
         ]);
 
         session(['captcha_result' => 10]);
@@ -307,7 +307,7 @@ class CommentControllerTest extends TestCase
             'author_name' => 'John Doe',
             'author_email' => 'john@example.com',
             'content' => 'This is a test comment with enough content to pass validation.',
-            'captcha_answer' => 10
+            'captcha_answer' => 10,
         ];
 
         $response = $this->post(route('comments.store', $this->blogPost), $commentData);
