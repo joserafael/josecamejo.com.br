@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\BlogPost;
 use App\Models\BlogCategory;
+use App\Models\BlogImage;
+use App\Models\BlogPost;
 use App\Models\BlogSubcategory;
 use App\Models\BlogTag;
-use App\Models\BlogImage;
 use App\Models\BlogVideo;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class BlogPostController extends Controller
 {
@@ -44,8 +44,8 @@ class BlogPostController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('content', 'like', "%{$search}%")
-                  ->orWhere('excerpt', 'like', "%{$search}%");
+                    ->orWhere('content', 'like', "%{$search}%")
+                    ->orWhere('excerpt', 'like', "%{$search}%");
             });
         }
 
@@ -100,11 +100,11 @@ class BlogPostController extends Controller
         $validated['user_id'] = Auth::id();
 
         // Handle published_at for scheduled posts
-        if ($validated['status'] === 'scheduled' && !$validated['published_at']) {
+        if ($validated['status'] === 'scheduled' && empty($validated['published_at'])) {
             return back()->withErrors(['published_at' => 'Published date is required for scheduled posts.'])->withInput();
         }
 
-        if ($validated['status'] === 'published' && !$validated['published_at']) {
+        if ($validated['status'] === 'published' && empty($validated['published_at'])) {
             $validated['published_at'] = now();
         }
 
@@ -124,7 +124,7 @@ class BlogPostController extends Controller
         }
 
         return redirect()->route('admin.blog-posts.index')
-                        ->with('success', 'Blog post created successfully.');
+            ->with('success', 'Blog post created successfully.');
     }
 
     /**
@@ -133,7 +133,7 @@ class BlogPostController extends Controller
     public function show(BlogPost $blogPost): View
     {
         $blogPost->load(['category', 'subcategory', 'author', 'tags', 'images', 'videos']);
-        
+
         return view('admin.blog-posts.show', compact('blogPost'));
     }
 
@@ -181,11 +181,11 @@ class BlogPostController extends Controller
         ]);
 
         // Handle published_at for scheduled posts
-        if ($validated['status'] === 'scheduled' && !$validated['published_at']) {
+        if ($validated['status'] === 'scheduled' && empty($validated['published_at'])) {
             return back()->withErrors(['published_at' => 'Published date is required for scheduled posts.'])->withInput();
         }
 
-        if ($validated['status'] === 'published' && !$validated['published_at'] && $blogPost->status !== 'published') {
+        if ($validated['status'] === 'published' && empty($validated['published_at']) && $blogPost->status !== 'published') {
             $validated['published_at'] = now();
         }
 
@@ -197,7 +197,7 @@ class BlogPostController extends Controller
         $blogPost->videos()->sync($request->videos ?? []);
 
         return redirect()->route('admin.blog-posts.index')
-                        ->with('success', 'Blog post updated successfully.');
+            ->with('success', 'Blog post updated successfully.');
     }
 
     /**
@@ -213,7 +213,7 @@ class BlogPostController extends Controller
         $blogPost->delete();
 
         return redirect()->route('admin.blog-posts.index')
-                        ->with('success', 'Blog post deleted successfully.');
+            ->with('success', 'Blog post deleted successfully.');
     }
 
     /**
@@ -221,9 +221,10 @@ class BlogPostController extends Controller
      */
     public function toggleFeatured(BlogPost $blogPost): RedirectResponse
     {
-        $blogPost->update(['is_featured' => !$blogPost->is_featured]);
+        $blogPost->update(['is_featured' => ! $blogPost->is_featured]);
 
         $status = $blogPost->is_featured ? 'featured' : 'unfeatured';
+
         return back()->with('success', "Blog post {$status} successfully.");
     }
 
@@ -233,7 +234,7 @@ class BlogPostController extends Controller
     public function duplicate(BlogPost $blogPost): RedirectResponse
     {
         $newPost = $blogPost->replicate();
-        $newPost->title = $newPost->title . ' (Copy)';
+        $newPost->title = $newPost->title.' (Copy)';
         $newPost->slug = null; // Will be auto-generated
         $newPost->status = 'draft';
         $newPost->published_at = null;
@@ -247,6 +248,6 @@ class BlogPostController extends Controller
         $newPost->videos()->sync($blogPost->videos->pluck('id'));
 
         return redirect()->route('admin.blog-posts.edit', $newPost)
-                        ->with('success', 'Blog post duplicated successfully.');
+            ->with('success', 'Blog post duplicated successfully.');
     }
 }
